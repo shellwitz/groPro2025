@@ -1,0 +1,7 @@
+Find out java version the .jar was compiled with:
+
+jar xf groPro2025.jar
+javap -verbose Main.class | grep "major" //in wsl
+
+
+

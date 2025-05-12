@@ -6,6 +6,27 @@
 \usepackage{listings}
 \usepackage{amsmath}
 \usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{parskip}
+%\usepackage{paralist}
+
+\lstdefinestyle{java}{
+  language=Java,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{red},
+  commentstyle=\color{gray}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=5pt,
+  tabsize=2,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single
+}
+
+\lstset{style=java}
 
 \hypersetup{
     colorlinks=true,
@@ -39,7 +60,16 @@
 
 % Eigenständigkeitserklärung
 \chapter*{Eigenständigkeitserklärung}
-Ich erkläre, dass das vorliegende Prüfprodukt von mir selbstständig erstellt wurde. Die als Arbeitshilfe genutzten Unterlagen sind in der Arbeit vollständig aufgeführt. Ich versichere, dass der vorgelegte Ausdruck mit dem Inhalt der von mir erstellten digitalen Version identisch ist. Weder ganz noch in Teilen wurde die Arbeit bereits als Prüfungsleistung vorgelegt. Mir ist bewusst, dass jedes Zuwiderhandeln als Täuschungsversuch zu gelten hat, der die Anerkennung als Prüfungsleistung ausschließt.
+Ich erkläre, dass das vorliegende Prüfprodukt von mir selbstständig erstellt wurde.
+Die als Arbeitshilfe genutzten Unterlagen sind in der Arbeit vollständig aufgeführt.
+Ich versichere, dass der vorgelegte Ausdruck mit dem Inhalt der von mir erstellten digitalen Version identisch ist.
+Weder ganz noch in Teilen wurde die Arbeit bereits als Prüfungsleistung vorgelegt.
+Mir ist bewusst, dass jedes Zuwiderhandeln als Täuschungsversuch zu gelten hat, der die Anerkennung als Prüfungsleistung ausschließt.
+
+\vspace{2cm}
+
+\noindent\rule{7cm}{0.4pt}\\
+Unterschrift
 
 \tableofcontents
 \listoffigures
@@ -54,73 +84,85 @@ Ich erkläre, dass das vorliegende Prüfprodukt von mir selbstständig erstellt 
 \section{Beschreibung Ausgabedatei}
 <Inhalt einfügen>
 
-\section{Simulationsende}
-<Inhalt einfügen>
-
 \chapter{Verfahrensbeschreibung}
-\section{Nebenläufigkeit}
-<Inhalt einfügen>
 
 \section{Einlesen}
 <Inhalt einfügen>
 
-\section{Mathematische Methoden}
-\subsection{Umrechnung und Normierung}
-<Inhalt einfügen>
-
-\subsection{Glättung der Daten}
-<Inhalt einfügen>
-
-\subsection{Obere Einhüllende}
-<Inhalt einfügen>
-
-\subsection{Pulsbreite}
-<Inhalt einfügen>
-
-\section{Ausgeben}
-<Inhalt einfügen>
-
-\chapter{Programmbeschreibung}
 \section{Datenhaltung}
 <Inhalt einfügen>
 
-\section{Einlesen}
+\section{Verarbeitung}
 <Inhalt einfügen>
 
-\section{Verarbeiten}
-<Inhalt einfügen>
-
-\section{Ausgeben}
+\section{Ausgabe}
 <Inhalt einfügen>
 
 \section{Gesamtablauf}
 <Inhalt einfügen>
 
-\chapter{Simulationsergebnis}
-\section{Signalverarbeitung}
-<Inhalt einfügen>
-
-\section{Nebenläufigkeit}
-<Inhalt einfügen>
-
 \chapter{Zusammenfassung und Ausblick}
-\section{Zusammenfassung}
-<Inhalt einfügen>
 
-\section{Ausblick}
-<Inhalt einfügen>
+\chapter {Tests}
+
 
 \appendix
 \chapter{Abweichungen und Ergänzungen zum Vorentwurf}
 <Inhalt einfügen>
 
 \chapter{Benutzeranleitung}
-<Inhalt einfügen>
+
+Um das Java-Programm auszuführen, gehen Sie wie folgt vor:
+
+\begin{enumerate}
+    \item Stellen Sie sicher, dass Java (mindestens Version 21) auf Ihrem System installiert ist.
+    \item Öffnen Sie eine Eingabeaufforderung (CMD) oder ein Terminal.
+    \item Navigieren Sie in das Verzeichnis, in dem sich die JAR-Datei befindet.
+    \item Führen Sie das Programm mit folgendem Befehl aus und geben Sie dabei den gewünschten Eingabepfad als Parameter an:
+    \begin{lstlisting}[language=bash]
+    java -jar MeinProgramm.jar <Pfad/zur/Eingabedatei>
+    \end{lstlisting}
+    \item Ersetzen Sie \texttt{<Pfad/zur/Eingabedatei>} durch den tatsächlichen Pfad zu Ihrer Eingabedatei.
+\end{enumerate}
+
+Beispiel:
+
+
+\texttt{java -jar MeinProgramm.jar C:\textbackslash Users\textbackslash debel\textbackslash input.txt}
+
+
+Das Programm verarbeitet die angegebene Datei und gibt die Ergebnisse entsprechend aus.
+
+Zum Testen des Programms steht je ein Skript für Windows und Linux/macOS zur Verfügung. Unter Windows wird das Skript \texttt{test\_run.bat} verwendet.
+Es führt die Datei \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} einzeln aus und übergibt sie als Argument an das Programm.
+
+Zur Ausführung müssen alle Eingabedateien im Verzeichnis \texttt{input\_files} liegen und sich die \texttt{.jar}-Datei im gleichen Ordner wie das Skript befinden.
+Das Skript kann entweder per Doppelklick oder über die Eingabeaufforderung mit \texttt{test\_run.bat} gestartet werden.
+
+Für Linux oder macOS wird das Bash-Skript \texttt{test\_run.sh} genutzt. Auch hier wird die \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} aufgerufen.
+
+Vor dem ersten Ausführen muss dem Skript Ausführungsrecht gegeben werden, z.\,B.\ durch den Befehl \texttt{chmod +x test\_run.sh}. Danach kann es mit \texttt{./test\_run.sh} ausgeführt werden.
+Alternativ kann das Skript auch ohne Ausführungsrecht mit \texttt{bash test\_run.sh} gestartet werden.
+
 
 \chapter{Entwicklungsumgebung}
-<Inhalt einfügen>
+Programmiersprache: Java
+
+Build-Tool: IntelliJ IDEA internes Build-Tool (kein externes Build-Tool wie Maven oder Gradle verwendet)
+
+JDK: Eclipse Temurin 21.0.2
+
+IDE: IntelliJ IDEA Community Edition 2024.1.4
+
+UML-Tool: PlantUml
+
+Nassi-Shneiderman-Diagramm-Tool: Structorizer 3.32-19
+
+Prozessor: 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz   1.80 GHz 
+
+Betriebssystem: Windows 11 Enterprise
 
 \chapter{Quellcode}
-%\lstinputlisting[language=Java]{<Pfad/zu/Datei.java>}
+\lstinputlisting[language=Java]{../src/packagy/Main.java}
 
 \end{document}

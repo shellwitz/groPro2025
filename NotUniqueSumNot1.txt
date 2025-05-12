@@ -1,0 +1,14 @@
+# Not unique entrypoints and intersections and probabilities do not sum to 100
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+B 0 2 D 3
+C 0 4 D 5
+D 2 2 E 2
+E 4 2 G 5
+
+Kreuzungen:
+B 0 2 A 20 C 20 E 50
+E 4 2 D 20 F 10 G 50

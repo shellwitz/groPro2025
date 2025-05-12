@@ -2,6 +2,7 @@ package packagy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
@@ -35,40 +36,36 @@ public class City {
   }
 
 
-  private void updateVehicles(){
+  private void updateVehicles() {
+    Iterator<Vehicle> iterator = vehicles.iterator();
 
-    for(Vehicle vehicle: vehicles){
+    while (iterator.hasNext()) {
+      Vehicle vehicle = iterator.next();
 
-      if(distance(vehicle.currentPosition, vehicle.toCoord) < vehicle.velocity){
-
+      if (distance(vehicle.currentPosition, vehicle.toCoord) < vehicle.velocity) {
         directedEdges.get(new DirectedEdge(vehicle.fromName, vehicle.toName)).currentNum--;
-        String newDestination = intersections.get (vehicle.toName).getNewDestinationByProbability(vehicle.fromName, random);
+        String newDestination = intersections.get(vehicle.toName).getNewDestinationByProbability(vehicle.fromName, random);
         vehicle.fromName = vehicle.toName;
         vehicle.toName = newDestination;
 
-        if(entryPoints.containsKey(newDestination)){
-          vehicles.remove(vehicle);
-
-        }else{
+        if (entryPoints.containsKey(newDestination)) {
+          iterator.remove(); // Safely remove the vehicle from the list
+        } else {
           double rest = vehicle.velocity - distance(vehicle.currentPosition, vehicle.toCoord);
 
           vehicle.fromCoord = vehicle.toCoord;
-          vehicle.toCoord = intersections.get (newDestination).coord;
+          vehicle.toCoord = intersections.get(newDestination).coord;
 
           vehicle.direction = subtract(vehicle.toCoord, vehicle.fromCoord);
-
           vehicle.direction.normalize();
           vehicle.direction.multiply(vehicle.velocity);
 
-          vehicle.currentPosition = add(vehicle.fromCoord, multiply (vehicle.direction, rest));
+          vehicle.currentPosition = add(vehicle.fromCoord, multiply(vehicle.direction, rest));
         }
-
       } else {
         vehicle.currentPosition = add(vehicle.currentPosition, vehicle.direction);
       }
-
     }
-
   }
 
   private Vehicle createNewVehicle(int id, String from, String to){
@@ -107,7 +104,7 @@ public class City {
 
         for(Map.Entry<String, EntryPoint> entry: entryPoints.entrySet ()){
           if(i % entry.getValue ().freq == 0){
-            vehicles.add (createNewVehicle (i, entry.getKey (), entry.getValue ().intersectionName));
+            vehicles.add (createNewVehicle (Helper.getId (), entry.getKey (), entry.getValue ().intersectionName));
           }
         }
 

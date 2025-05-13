@@ -1,8 +1,8 @@
 package packagy;
 
 public class Coord {
-  double x;
-  double y;
+  public double x;
+  public double y;
 
   public Coord (double x,
                 double y) {

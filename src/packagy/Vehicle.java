@@ -5,15 +5,15 @@ public class Vehicle {
   public static final double EXPECTED_VELOCITY  = 0.125; //0.125 *100m per s = 45 km/h
   public static final double STANDARD_DEVIATION = (double) 100 / 3600;
 
-  int    id;
+  public int id;
 
   String fromName;
   String toName;
 
   Coord fromCoord;
-  Coord toCoord;
+  public Coord toCoord;
 
-  Coord  currentPosition;
+  public Coord currentPosition;
   Coord direction;
 
   double velocity;

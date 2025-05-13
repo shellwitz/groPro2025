@@ -3,7 +3,7 @@ package packagy;
 import java.util.Random;
 
 public class Intersection {
-      Coord coord;
+  public Coord coord;
 
       NamesAndProbabilities namesAndProbabilities;
 

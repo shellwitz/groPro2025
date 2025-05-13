@@ -1,7 +1,7 @@
 package packagy;
 
 public class DirectedEdgeInfo {
-  int totalCount;
+  public int totalCount;
   int currentNum;
-  int maxNum;
+  public int maxNum;
 }

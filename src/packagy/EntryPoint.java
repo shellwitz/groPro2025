@@ -1,7 +1,7 @@
 package packagy;
 
 public class EntryPoint {
-  Coord coord;
+  public Coord coord;
   int freq;
   String intersectionName;
 }

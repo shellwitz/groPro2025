@@ -3,8 +3,8 @@ package packagy;
 import java.util.Objects;
 
 public class DirectedEdge {
-  String from;
-  String to;
+  public String from;
+  public String to;
 
   public DirectedEdge (String from,
                        String to) {

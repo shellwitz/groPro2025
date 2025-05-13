@@ -21,7 +21,7 @@ public class City {
   private final ArrayList<Vehicle>            vehicles       = new ArrayList<>();
   private final ArrayList<ArrayList<Vehicle>> vehicleHistory = new ArrayList<>();
 
-  private Random random = new Random ();
+  private final Random random = new Random ();
 
 
   public City(HashMap<String, EntryPoint> entryPoints,
@@ -34,6 +34,14 @@ public class City {
     this.maxTime = maxTime;
     this.directedEdges = directedEdges;
 
+  }
+
+  public City(CityDTO cityDTO) {
+    this.entryPoints = cityDTO.entryPoints;
+    this.intersections = cityDTO.intersections;
+    this.frequency = cityDTO.frequency;
+    this.maxTime = cityDTO.maxTime;
+    this.directedEdges = cityDTO.directedEdges;
   }
 
   public HashMap<DirectedEdge, DirectedEdgeInfo> getDirectedEdges() {
@@ -56,49 +64,54 @@ public class City {
     return frequency;
   }
 
+  private void updateVehicle(Iterator<Vehicle> vehicleIterator){
+    Vehicle vehicle = vehicleIterator.next();
+
+    if (distance(vehicle.currentPosition, vehicle.toCoord) < vehicle.velocity) {
+
+      directedEdges.get(new DirectedEdge(vehicle.fromName, vehicle.toName)).decrement();
+      if(entryPoints.containsKey(vehicle.toName)){
+        vehicleIterator.remove(); // Safely remove the vehicle from the list
+
+      }else{
+        String newDestination = intersections.get(vehicle.toName).getNewDestinationByProbability(vehicle.fromName, random);
+
+        assert !Objects.equals (newDestination, vehicle.fromName) : "vehicle is not allowed to turn";
+
+        vehicle.fromName = vehicle.toName;
+        vehicle.toName = newDestination;
+        double rest = vehicle.velocity - distance(vehicle.currentPosition, vehicle.toCoord);
+
+
+
+        Coord toCoord;
+        if (entryPoints.containsKey(newDestination)) {
+          toCoord = entryPoints.get(newDestination).coord;
+        } else {
+          toCoord = intersections.get(newDestination).coord;
+        }
+
+        vehicle.fromCoord = vehicle.toCoord;
+        vehicle.toCoord = toCoord;
+
+        vehicle.direction = subtract(vehicle.toCoord, vehicle.fromCoord);
+        vehicle.direction.normalize();
+        vehicle.direction.multiply(vehicle.velocity);
+
+        vehicle.currentPosition = add(vehicle.fromCoord, multiply(vehicle.direction, rest));
+        directedEdges.get(new DirectedEdge(vehicle.fromName, vehicle.toName)).increment();
+      }
+    } else {
+      vehicle.currentPosition = add(vehicle.currentPosition, vehicle.direction);
+    }
+  }
+
 
   private void updateVehicles() {
     Iterator<Vehicle> iterator = vehicles.iterator();
 
     while (iterator.hasNext()) {
-      Vehicle vehicle = iterator.next();
-
-      if (distance(vehicle.currentPosition, vehicle.toCoord) < vehicle.velocity) {
-
-        directedEdges.get(new DirectedEdge(vehicle.fromName, vehicle.toName)).currentNum--;
-        if(entryPoints.containsKey(vehicle.toName)){
-          iterator.remove(); // Safely remove the vehicle from the list
-
-        }else{
-          String newDestination = intersections.get(vehicle.toName).getNewDestinationByProbability(vehicle.fromName, random);
-
-          assert !Objects.equals (newDestination, vehicle.fromName) : "vehicle is not allowed to turn";
-
-          vehicle.fromName = vehicle.toName;
-          vehicle.toName = newDestination;
-          double rest = vehicle.velocity - distance(vehicle.currentPosition, vehicle.toCoord);
-          
-          
-
-          Coord toCoord;
-          if (entryPoints.containsKey(newDestination)) {
-            toCoord = entryPoints.get(newDestination).coord;
-          } else {
-            toCoord = intersections.get(newDestination).coord;
-          }
-
-          vehicle.fromCoord = vehicle.toCoord;
-          vehicle.toCoord = toCoord;
-
-          vehicle.direction = subtract(vehicle.toCoord, vehicle.fromCoord);
-          vehicle.direction.normalize();
-          vehicle.direction.multiply(vehicle.velocity);
-
-          vehicle.currentPosition = add(vehicle.fromCoord, multiply(vehicle.direction, rest));
-        }
-      } else {
-        vehicle.currentPosition = add(vehicle.currentPosition, vehicle.direction);
-      }
+      updateVehicle(iterator); // the vehicleIterator.next(); is called in the method
     }
   }
 
@@ -120,14 +133,24 @@ public class City {
 
     DirectedEdge fromTo = new DirectedEdge(from, to);
 
-    directedEdges.get(fromTo).currentNum++;
-    directedEdges.get(fromTo).totalCount++;
-
-    if(directedEdges.get(fromTo).currentNum > directedEdges.get(fromTo).maxNum){
-      directedEdges.get(fromTo).maxNum = directedEdges.get(fromTo).currentNum;
-    }
+    directedEdges.get(fromTo).increment();
 
     return vehicle;
+  }
+
+  private void updateVehicleHistory() {
+    ArrayList<Vehicle> deepCopiedVehicles = new ArrayList<>();
+    for (Vehicle vehicle : vehicles) {
+      deepCopiedVehicles.add(vehicle.clone());
+    }
+    vehicleHistory.add(deepCopiedVehicles);
+  }
+
+  private void updateDirectedEdgesMaxima() {
+    for (Map.Entry<DirectedEdge, DirectedEdgeInfo> entry : directedEdges.entrySet()) {
+      DirectedEdgeInfo info = entry.getValue();
+      info.updateMaxNum();
+    }
   }
 
   public void simulate(){
@@ -135,17 +158,15 @@ public class City {
         updateVehicles ();
 
         for(Map.Entry<String, EntryPoint> entry: entryPoints.entrySet ()){
-          if(entry.getValue ().freq != 0 && i % entry.getValue ().freq == 0){ //TODO think if zero fequencies are even allowed, just for test purposes
+          if(i % entry.getValue ().freq == 0){
             vehicles.add (createNewVehicle (Helper.getId (), entry.getKey (), entry.getValue ().intersectionName));
           }
         }
 
+        updateDirectedEdgesMaxima();
+
         if(i % frequency == 0){
-          ArrayList<Vehicle> deepCopiedVehicles = new ArrayList<>();
-          for (Vehicle vehicle : vehicles) {
-            deepCopiedVehicles.add(vehicle.clone());
-          }
-          vehicleHistory.add(deepCopiedVehicles);
+          updateVehicleHistory();
         }
 
       }

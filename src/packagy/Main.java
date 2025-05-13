@@ -3,20 +3,21 @@ package packagy;
 import java.io.File;
 import java.io.IOException;
 
-import static packagy.PathValidator.*;
-import static packagy.TextFileReader.*;
+
 
 public class Main {
   public static void main(String[] args) throws IOException {
-
+  String path = args[0];
     
-    String path = getValidPath();
+    //String path = getValidPath();
 
     //City city = readFromFile("C:\\Users\\debel\\Workspace\\groPro2025\\groPro2025\\testy.txt");
-    City city = readFromFile(path);
+    Reader reader = new TextFileReader(path);
+    City city = new City (reader.read ());
     city.simulate ();
 
-    String outputDirName = "output_" + new File(path).getName();
+    String fileNameWithoutExtension = new File(path).getName().replaceFirst("[.][^.]+$", "");
+    String outputDirName = "output_" + fileNameWithoutExtension;
     File outputDir = new File(outputDirName);
     outputDir.mkdirs();
 

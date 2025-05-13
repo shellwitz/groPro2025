@@ -42,6 +42,7 @@ public class BadInputTestRunner {
         testCases.put("ERROR_INVALID_PROBABILITY_SUM.txt", ERROR_INVALID_PROBABILITY_SUM);
         testCases.put("ERROR_MULTIPLE_TIMESPAN_SECTIONS.txt", ERROR_MULTIPLE_TIMESPAN_SECTIONS);
         testCases.put("ERROR_NOT_UTF8.jpeg", ERROR_NOT_UTF8);
+        testCases.put("nonExistentFilePath", ERROR_INVALID_FILE_PATH);
 
         boolean allTestsPassed = true;
 
@@ -50,16 +51,12 @@ public class BadInputTestRunner {
             String fileName = testCase.getKey();
             String expectedMessage = testCase.getValue();
 
-            File testFile = new File(badInputDir, fileName);
-            if (!testFile.exists()) {
-                System.err.println("ERROR: Test file not found: " + fileName);
-                continue;
-            }
 
             System.out.println("Testing file: " + fileName);
 
             try {
-                TextFileReader.readFromFile(testFile.getAbsolutePath());
+                TextFileReader reader = new TextFileReader(badInputDirPath + File.separator + fileName);
+                reader.read();
                 System.err.println("ERROR: No exception thrown for file: " + fileName);
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().startsWith(expectedMessage)) {
@@ -70,9 +67,6 @@ public class BadInputTestRunner {
                     System.err.println("Expected: " + expectedMessage);
                     System.err.println("Actual: " + e.getMessage());
                 }
-            } catch (IOException e) {
-                System.err.println("ERROR: IOException occurred for file: " + fileName);
-                e.printStackTrace();
             }
         }
 

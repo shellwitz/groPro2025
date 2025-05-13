@@ -10,5 +10,5 @@ D 2 2 E 2
 E 4 2 G 5
 
 Kreuzungen:
-B 0 2 A 20 C 20 E 50
-E 4 2 D 20 F 10 G 50
+B 0 2 A 20 C 20 E 60
+E 4 2 D 40 F 10 G 50

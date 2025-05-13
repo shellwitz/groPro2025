@@ -1,0 +1,8 @@
+# Test case: Empty intersections
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+
+Kreuzungen:

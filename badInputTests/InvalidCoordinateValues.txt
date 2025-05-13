@@ -1,0 +1,10 @@
+# Test case: Invalid coordinate values
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 2000 0 B 2
+C 0 -2000 B 5
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50

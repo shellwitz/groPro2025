@@ -1,5 +1,7 @@
 package packagy;
 
+import java.util.Objects;
+
 public class Coord {
   public double x;
   public double y;

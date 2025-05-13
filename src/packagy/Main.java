@@ -2,6 +2,8 @@ package packagy;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 
 
@@ -21,8 +23,11 @@ public class Main {
     File outputDir = new File(outputDirName);
     outputDir.mkdirs();
 
-    packagy.Output.PlanWriter.write(new File(outputDir, "Plan.txt").getPath(), city.getDirectedEdges(), city.getEntryPoints(), city.getIntersections());
-    packagy.Output.StatisticWriter.write(new File(outputDir, "Statistik.txt").getPath(), city.getDirectedEdges(), city.getEntryPoints(), city.getIntersections());
+    List<Map.Entry<DirectedEdge, DirectedEdgeInfo>> alphabeticallySortedDirectedEdges = city.getAlphabeticallySortedDirectedEdges();
+
+
+    packagy.Output.PlanWriter.write(new File(outputDir, "Plan.txt").getPath(), alphabeticallySortedDirectedEdges, city.getEntryPoints(), city.getIntersections());
+    packagy.Output.StatisticWriter.write(new File(outputDir, "Statistik.txt").getPath(), alphabeticallySortedDirectedEdges, city.getEntryPoints(), city.getIntersections());
     packagy.Output.VehicleWriter.write(new File(outputDir, "Fahrzeuge.txt").getPath(), city.getVehicleHistory(), city.getFrequency());
 
     System.out.println("Simulation beendet");

@@ -1,3 +1,5 @@
 Prüflingsnummer eintragen
 
 rename frequency to clock rate
+
+rename packagy

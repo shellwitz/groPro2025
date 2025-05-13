@@ -1,8 +1,10 @@
 package packagy;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -151,6 +153,12 @@ public class City {
       DirectedEdgeInfo info = entry.getValue();
       info.updateMaxNum();
     }
+  }
+
+  public List<Map.Entry<DirectedEdge, DirectedEdgeInfo>> getAlphabeticallySortedDirectedEdges(){
+    List<Map.Entry<DirectedEdge, DirectedEdgeInfo>> sortedEntries = new ArrayList<>(directedEdges.entrySet());
+    sortedEntries.sort(Comparator.comparing(entry -> entry.getKey().from + entry.getKey().to));
+    return sortedEntries;
   }
 
   public void simulate(){

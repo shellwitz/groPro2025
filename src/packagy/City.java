@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import static packagy.Coord.*;
@@ -70,9 +71,14 @@ public class City {
 
         }else{
           String newDestination = intersections.get(vehicle.toName).getNewDestinationByProbability(vehicle.fromName, random);
+
+          assert !Objects.equals (newDestination, vehicle.fromName) : "vehicle is not allowed to turn";
+
           vehicle.fromName = vehicle.toName;
           vehicle.toName = newDestination;
           double rest = vehicle.velocity - distance(vehicle.currentPosition, vehicle.toCoord);
+          
+          
 
           Coord toCoord;
           if (entryPoints.containsKey(newDestination)) {

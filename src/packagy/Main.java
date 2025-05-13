@@ -10,7 +10,7 @@ public class Main {
 
     System.out.println("Hello World");
 
-    City city = readFromFile("C:\\Users\\debel\\Workspace\\groPro2025\\groPro2025\\testySlowed.txt");
+    City city = readFromFile("C:\\Users\\debel\\Workspace\\groPro2025\\groPro2025\\testy.txt");
     city.simulate ();
 
     File file = new File("output/Plan.txt");

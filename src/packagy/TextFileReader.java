@@ -9,26 +9,28 @@ import java.util.*;
 
 public class TextFileReader {
 
-  private static final String ERROR_NOT_UTF8 = "Eingabedatei ist nicht UTF-8 kodiert: ";
-  private static final String ERROR_MULTIPLE_ZEITRAUM = "Mehrere 'Zeitraum:' Abschnitte sind nicht erlaubt.";
-  private static final String ERROR_MULTIPLE_EINFALLSPUNKTE = "Mehrere 'Einfallspunkte:' Abschnitte sind nicht erlaubt.";
-  private static final String ERROR_MULTIPLE_KREUZUNGEN = "Mehrere 'Kreuzungen:' Abschnitte sind nicht erlaubt.";
-  private static final String ERROR_INVALID_ZEITRAUM_FORMAT = "Ungültiges Format für 'Zeitraum:'. Erwartet werden zwei Werte.";
-  private static final String ERROR_NO_ENTRY_POINTS = "Keine Einfallspunkte gefunden.";
-  private static final String ERROR_NO_INTERSECTIONS = "Keine Kreuzungen gefunden.";
-  private static final String ERROR_DUPLICATE_LOCATIONS = "Orte können nicht gleichzeitig Einfallspunkte und Kreuzungen sein.";
-  private static final String ERROR_INVALID_ENTRY_POINT_REFERENCE = "Nicht alle Referenzen von Einfallspunkten existieren tatsächlich.";
-  private static final String ERROR_INVALID_INTERSECTION_REFERENCE = "Nicht alle Referenzen von Kreuzungen existieren tatsächlich.";
-  private static final String ERROR_INVALID_MAX_TIME = "Ungültiger Wert für maxTime: ";
-  private static final String ERROR_INVALID_GENERAL_FREQUENCY = "Ungültiger Wert für allgemeine Frequenz: ";
-  private static final String ERROR_COORDINATES_TOO_CLOSE = "Koordinaten sind zu nah beieinander: ";
-  private static final String ERROR_INVALID_COORDINATE_COMPONENT = "Ungültiger Wert für Koordinatenkomponente: ";
-  private static final String ERROR_INVALID_PROBABILITY = "Ungültiger Wert für Wahrscheinlichkeit in Prozent: ";
-  private static final String ERROR_INVALID_ENTRY_POINT_FORMAT = "Ungültiges Format für Einfallspunkt: ";
-  private static final String ERROR_DUPLICATE_ENTRY_POINT_NAME = "Doppelter Einfallspunktname: ";
-  private static final String ERROR_INVALID_INTERSECTION_FORMAT = "Ungültiges Format für Kreuzung: ";
-  private static final String ERROR_DUPLICATE_INTERSECTION_NAME = "Doppelter Kreuzungsname: ";
-  private static final String ERROR_INVALID_PROBABILITY_SUM = "Wahrscheinlichkeiten müssen 1 ergeben: ";
+  public static final String ERROR_NOT_UTF8                     = "Eingabedatei ist nicht UTF-8 kodiert: ";
+  public static final String ERROR_MULTIPLE_TIMESPAN_SECTIONS   = "Mehrere 'Zeitraum:' Abschnitte sind nicht erlaubt.";
+  public static final String ERROR_MULTIPLE_ENTRYPOINT_SECTIONS = "Mehrere 'Einfallspunkte:' Abschnitte sind nicht erlaubt.";
+  public static final String ERROR_MULTIPLE_CROSSING_SECTIONS   = "Mehrere 'Kreuzungen:' Abschnitte sind nicht erlaubt.";
+  public static final String ERROR_INVALID_TIMESPAN_FORMAT    = "Ungültiges Format für 'Zeitraum:'. Erwartet werden zwei Werte.";
+  public static final String ERROR_NO_ENTRY_POINTS         = "Keine Einfallspunkte gefunden.";
+  public static final String ERROR_NO_INTERSECTIONS = "Keine Kreuzungen gefunden.";
+  public static final String ERROR_DUPLICATE_LOCATIONS = "Orte können nicht gleichzeitig Einfallspunkte und Kreuzungen sein.";
+  public static final String ERROR_INVALID_ENTRY_POINT_REFERENCE = "Nicht alle Referenzen von Einfallspunkten existieren tatsächlich.";
+  public static final String ERROR_INVALID_INTERSECTION_REFERENCE = "Nicht alle Referenzen von Kreuzungen existieren tatsächlich.";
+  public static final String ERROR_INVALID_MAX_TIME = "Ungültiger Wert für die Simulationszeitspanne: ";
+  public static final String ERROR_INVALID_GENERAL_FREQUENCY    = "Ungültiger Wert für allgemeine Frequenz: ";
+  public static final String ERROR_COORDINATES_TOO_CLOSE        = "Koordinaten sind zu nah beieinander: ";
+  public static final String ERROR_INVALID_COORDINATE_COMPONENT = "Ungültiger Wert für Koordinatenkomponente: ";
+  public static final String ERROR_INVALID_PROBABILITY = "Ungültiger Wert für Wahrscheinlichkeit in Prozent: ";
+  public static final String ERROR_INVALID_ENTRY_POINT_FORMAT = "Ungültiges Format für Einfallspunkt: ";
+  public static final String ERROR_DUPLICATE_ENTRY_POINT_NAME = "Doppelter Einfallspunktname: ";
+  public static final String ERROR_INVALID_INTERSECTION_FORMAT = "Ungültiges Format für Kreuzung: ";
+  public static final String ERROR_DUPLICATE_INTERSECTION_NAME = "Doppelter Kreuzungsname: ";
+  public static final String ERROR_INVALID_PROBABILITY_SUM = "Wahrscheinlichkeiten müssen 1 ergeben: ";
+  public static final String ERROR_ENTRY_POINT_NAME_TOO_LONG = "Einfallspunktname ist zu lang: ";
+  public static final String ERROR_INTERSECTION_NAME_TOO_LONG = "Kreuzungsname ist zu lang: ";
 
   private static boolean isUTF8Encoded(String filePath) {
     try {
@@ -79,11 +81,11 @@ private static String stripComment(String line) {
 
         if (line.equalsIgnoreCase("Zeitraum:") || line.equalsIgnoreCase("Einfallspunkte:") || line.equalsIgnoreCase("Kreuzungen:")) {
           if (line.equalsIgnoreCase("Zeitraum:") && hasZeitraum) {
-            throw new IllegalArgumentException(ERROR_MULTIPLE_ZEITRAUM);
+            throw new IllegalArgumentException(ERROR_MULTIPLE_TIMESPAN_SECTIONS);
           } else if (line.equalsIgnoreCase("Einfallspunkte:") && hasEinfallspunkte) {
-            throw new IllegalArgumentException(ERROR_MULTIPLE_EINFALLSPUNKTE);
+            throw new IllegalArgumentException(ERROR_MULTIPLE_ENTRYPOINT_SECTIONS);
           } else if (line.equalsIgnoreCase("Kreuzungen:") && hasKreuzungen) {
-            throw new IllegalArgumentException(ERROR_MULTIPLE_KREUZUNGEN);
+            throw new IllegalArgumentException(ERROR_MULTIPLE_CROSSING_SECTIONS);
           }
 
           section = line;
@@ -98,7 +100,7 @@ private static String stripComment(String line) {
             String[] timeParts = line.split("\\s+");
 
             if(timeParts.length != 2) {
-              throw new IllegalArgumentException(ERROR_INVALID_ZEITRAUM_FORMAT);
+              throw new IllegalArgumentException(ERROR_INVALID_TIMESPAN_FORMAT);
             }
 
             maxTime = checkMaxTime(timeParts[0]);
@@ -205,7 +207,7 @@ private static String stripComment(String line) {
     String name = parts[0];
 
     if(name.length() > 100) {
-      throw new IllegalArgumentException("Einfallspunktname ist zu lang: " + name);
+      throw new IllegalArgumentException(ERROR_ENTRY_POINT_NAME_TOO_LONG + name);
     }
 
     if (entryPoints.containsKey(name)) {
@@ -269,14 +271,14 @@ private static String stripComment(String line) {
     }
 
     if(name.length() > 100) {
-      throw new IllegalArgumentException("Kreuzungsname ist zu lang: " + name);
+      throw new IllegalArgumentException(ERROR_INTERSECTION_NAME_TOO_LONG + name);
     }
 
     if (parts.length <9) {
       throw new IllegalArgumentException(ERROR_INVALID_INTERSECTION_FORMAT + line);
     }
 
-    if(parts.length % 2 == 1) {
+    if(parts.length % 2 != 1) {
       throw new IllegalArgumentException(ERROR_INVALID_INTERSECTION_FORMAT + line);
     }
 

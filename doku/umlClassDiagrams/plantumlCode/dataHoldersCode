@@ -1,0 +1,94 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+package trafficsimulation {
+
+  class CityDTO {
+    - entryPoints: HashMap<String, EntryPoint>
+    - intersections: HashMap<String, Intersection>
+    - directedEdges: HashMap<DirectedEdge, DirectedEdgeInfo>
+    - clockRate: int
+    - maxTime: int
+    + CityDTO(entryPoints: HashMap<String, EntryPoint>, intersections: HashMap<String, Intersection>, directedEdges: HashMap<DirectedEdge, DirectedEdgeInfo>, clockRate: int, maxTime: int)
+  }
+
+  class Coord {
+    - x: double
+    - y: double
+    + Coord(x: double, y: double)
+    + clone(): Coord
+    + normalize(): void
+    + multiply(factor: double): void
+    + add(other: Coord): void
+    + subtract(other: Coord): void
+    + static distance(a: Coord, b: Coord): double
+    + static add(a: Coord, b: Coord): Coord
+    + static subtract(a: Coord, b: Coord): Coord
+    + static multiply(a: Coord, b: double): Coord
+  }
+
+  class DirectedEdge {
+    - from: String
+    - to: String
+    + DirectedEdge(from: String, to: String)
+    + equals(obj: Object): boolean
+    + hashCode(): int
+  }
+
+  class DirectedEdgeInfo {
+    - totalCount: int
+    - currentNum: int
+    - maxNum: int
+    + DirectedEdgeInfo()
+    + increment(): void
+    + decrement(): void
+    + updateMaxNum(): void
+    + getTotalCount(): int
+    + getCurrentNum(): int
+    + getMaxNum(): int
+  }
+
+  class EntryPoint {
+    - coord: Coord
+    - freq: int
+    - intersectionName: String
+  }
+
+  class Intersection {
+    - coord: Coord
+    - namesAndProbabilities: NamesAndProbabilities
+    + calcProbArr(nameToIgnore: String): NamesAndProbabilities
+    + getNewDestinationByProbability(nameToIgnore: String, random: Random): String
+  }
+
+  class NamesAndProbabilities {
+    - names: String[]
+    - probabilities: double[]
+    + NamesAndProbabilities(names: String[], probabilities: double[])
+  }
+
+  class Vehicle {
+    {static} EXPECTED_VELOCITY: double
+    {static} STANDARD_DEVIATION: double
+    - id: int
+    - fromName: String
+    - toName: String
+    - fromCoord: Coord
+    - toCoord: Coord
+    - currentPosition: Coord
+    - direction: Coord
+    - velocity: double
+    + clone(): Vehicle
+  }
+
+  CityDTO "1" o-- "*" EntryPoint : entryPoints
+  CityDTO "1" o-- "*" Intersection : intersections
+  CityDTO "1" o-- "*" DirectedEdge : directedEdges (keys)
+  CityDTO "1" o-- "*" DirectedEdgeInfo : directedEdges (values)
+  EntryPoint "1" o-- "1" Coord : coord
+  Intersection "1" o-- "1" Coord : coord
+  Intersection "1" o-- "1" NamesAndProbabilities
+  Vehicle "1" o-- "*" Coord : fromCoord, toCoord, currentPosition, direction
+
+}
+@enduml

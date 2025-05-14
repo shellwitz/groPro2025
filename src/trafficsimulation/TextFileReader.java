@@ -284,25 +284,7 @@ public class TextFileReader implements Reader {
         String[] parts = line.split("\\s+");
         String name = parts[0];
 
-        if (intersections.containsKey(name)) {
-            throw new IllegalArgumentException(ERROR_DUPLICATE_INTERSECTION_NAME + name);
-        }
-
-        if (name.length() > 100) {
-            throw new IllegalArgumentException(ERROR_INTERSECTION_NAME_TOO_LONG + name);
-        }
-
-        if (parts.length < MIN_CONNECTED_STREETS) { //length smaller than 7 means there can only be less than 2 destinations, the format is invalid
-            throw new IllegalArgumentException(ERROR_TOO_FEW_CONNECTED_STREETS + line);
-        }
-
-        if (parts.length % 2 != EXPECTED_ODD_PARTS) { //if there are not an odd number of parts, it means that not each destination has a probability
-            throw new IllegalArgumentException(ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED + line);
-        }
-
-        if(parts.length > MAX_CONNECTED_STREETS){
-            throw new IllegalArgumentException(ERROR_TOO_MANY_CONNECTED_STREETS + line);
-        }
+        validateIntersectionInput(name, parts, intersections, line);
 
         double x = checkCoordinateComponent(parts[1]);
         double y = checkCoordinateComponent(parts[2]);
@@ -324,14 +306,13 @@ public class TextFileReader implements Reader {
             directedEdges.putIfAbsent(reverse, new DirectedEdgeInfo());
         }
 
-        final double total;
-        {
-            double sum = 0;
-            for (Double prob : probs) {
-                sum += prob;
-            }
-            total = sum;
-        }
+        processIntersection(name, x, y, probs, dests, coordChecker, referencesMadeByIntersections, intersections);
+    }
+
+    private static void processIntersection(String name, double x, double y, List<Double> probs, List<String> dests,
+                                            List<Coord> coordChecker, HashSet<String> referencesMadeByIntersections,
+                                            Map<String, Intersection> intersections) {
+        final double total = calculateTotalProbability(probs);
 
         for (int i = 0; i < probs.size(); i++) {
             probs.set(i, probs.get(i) / total);
@@ -346,7 +327,6 @@ public class TextFileReader implements Reader {
         Intersection inter = new Intersection();
         inter.coord = intersectionCoord;
 
-        // Replace the stream-based conversion with a for-loop
         double[] probabilitiesArray = new double[probs.size()];
         for (int i = 0; i < probs.size(); i++) {
             probabilitiesArray[i] = probs.get(i);
@@ -358,6 +338,36 @@ public class TextFileReader implements Reader {
         );
 
         intersections.put(name, inter);
+    }
+
+    private static double calculateTotalProbability(List<Double> probabilities) {
+        double sum = 0;
+        for (Double prob : probabilities) {
+            sum += prob;
+        }
+        return sum;
+    }
+
+    private static void validateIntersectionInput(String name, String[] parts, Map<String, Intersection> intersections, String line) {
+        if (intersections.containsKey(name)) {
+            throw new IllegalArgumentException(ERROR_DUPLICATE_INTERSECTION_NAME + name);
+        }
+
+        if (name.length() > 100) {
+            throw new IllegalArgumentException(ERROR_INTERSECTION_NAME_TOO_LONG + name);
+        }
+
+        if (parts.length < MIN_CONNECTED_STREETS) {
+            throw new IllegalArgumentException(ERROR_TOO_FEW_CONNECTED_STREETS + line);
+        }
+
+        if (parts.length % 2 != EXPECTED_ODD_PARTS) {
+            throw new IllegalArgumentException(ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED + line);
+        }
+
+        if (parts.length > MAX_CONNECTED_STREETS) {
+            throw new IllegalArgumentException(ERROR_TOO_MANY_CONNECTED_STREETS + line);
+        }
     }
 
     private static void validateCityData(Map<String, EntryPoint> entryPoints, Map<String, Intersection> intersections, Set<String> referencesMadeByEntryPoints, Set<String> referencesMadeByIntersections) {

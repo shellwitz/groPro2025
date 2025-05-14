@@ -1,7 +1,7 @@
 @echo off
 
 REM Set the directory containing input files
-set INPUT_DIR=edgeCases
+set INPUT_DIR=normalCases
 
 REM Loop through all files in the input directory
 for %%f in (%INPUT_DIR%\*) do (

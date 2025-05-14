@@ -1,6 +1,6 @@
 # Test case: Decimal value for maxTime
 Zeitraum:
-50.5 1
+50.0 1
 
 Einfallspunkte:
 A 0 0 B 2

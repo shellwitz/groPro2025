@@ -1,0 +1,23 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+  class City {
+    - entryPoints: HashMap<String, EntryPoint>
+    - intersections: HashMap<String, Intersection>
+    - directedEdges: HashMap<DirectedEdge, DirectedEdgeInfo>
+    - clockRate: int
+    - maxTime: int
+    - vehicles: ArrayList<Vehicle>
+    - vehicleHistory: ArrayList<ArrayList<Vehicle>>
+    - random: Random
+    + City(cityDTO: CityDTO)
+    + getDirectedEdges(): HashMap<DirectedEdge, DirectedEdgeInfo>
+    + getEntryPoints(): HashMap<String, EntryPoint>
+    + getIntersections(): HashMap<String, Intersection>
+    + getVehicleHistory(): ArrayList<ArrayList<Vehicle>>
+    + getClockRate(): int
+    + getAlphabeticallySortedDirectedEdges(): List<Entry<DirectedEdge, DirectedEdgeInfo>>
+    + simulate(): void
+  }
+}
+@enduml

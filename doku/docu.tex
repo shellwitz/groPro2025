@@ -2,13 +2,17 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[ngerman]{babel}
-\usepackage{graphicx}
+
 \usepackage{listings}
 \usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{parskip}
-%\usepackage{paralist}
+
+\usepackage{placeins}
+\usepackage{graphicx}
+%\graphicspath{{images/}}
+
 
 \lstdefinestyle{java}{
   language=Java,
@@ -49,7 +53,7 @@
     \vspace*{3cm}
     {\Huge \textbf{Dokumentation der praktischen Arbeit}}\\[2cm]
     {\large zur Prüfung zum \\ Mathematisch-technischen Softwareentwickler}\\[2cm]
-    {\Large \textbf{Thema: <Thema einfügen>}}\\[1cm]
+    {\Large \textbf{Thema: Simulation von Verkehrsflüssen}}\\[1cm]
     {16.05.2025}\\[5cm]
     {Daniel Ebel}\\[2cm]
     Prüflingsnummer: 20015\\[0.5cm]
@@ -72,34 +76,18 @@ Mir ist bewusst, dass jedes Zuwiderhandeln als Täuschungsversuch zu gelten hat,
 Unterschrift
 
 \tableofcontents
-\listoffigures
+%\listoffigures
 
-\chapter{Aufgabenanalyse}
-\section{Beschreibung Eingabedatei}
-<Inhalt einfügen>
+\include{intro}
 
-\section{Verarbeitung}
-<Inhalt einfügen>
+\include{reqAnalysis}
+
+\include{procedureDescription}
 
 \section{Beschreibung Ausgabedatei}
 <Inhalt einfügen>
 
-\chapter{Verfahrensbeschreibung}
 
-\section{Einlesen}
-<Inhalt einfügen>
-
-\section{Datenhaltung}
-<Inhalt einfügen>
-
-\section{Verarbeitung}
-<Inhalt einfügen>
-
-\section{Ausgabe}
-<Inhalt einfügen>
-
-\section{Gesamtablauf}
-<Inhalt einfügen>
 
 \chapter{Zusammenfassung und Ausblick}
 

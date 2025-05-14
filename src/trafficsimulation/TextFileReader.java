@@ -35,6 +35,17 @@ public class TextFileReader implements Reader {
     public static final String ERROR_INVALID_FILE_PATH = "Der angegebene Dateipfad existiert nicht oder ist keine gültige Datei: ";
     public static final String ERROR_TOO_MANY_CONNECTED_STREETS = "Diese Kreuzung hat eventuell zu viele verbindende Straßen: ";
 
+    private static final int MAX_CONNECTED_STREETS = 20;
+    private static final int MIN_CONNECTED_STREETS = 7;
+    private static final int EXPECTED_ODD_PARTS = 1;
+
+    private static final int ENTRY_POINT_PARTS_COUNT = 5;
+    private static final int ENTRY_POINT_NAME_MAX_LENGTH = 100;
+    private static final int ENTRY_POINT_X_INDEX = 1;
+    private static final int ENTRY_POINT_Y_INDEX = 2;
+    private static final int ENTRY_POINT_DEST_INDEX = 3;
+    private static final int ENTRY_POINT_FREQ_INDEX = 4;
+
     private final String filePath;
 
     public TextFileReader(String filePath) {
@@ -69,43 +80,44 @@ public class TextFileReader implements Reader {
             while ((line = br.readLine()) != null) {
 
                 line = stripComment(line);
-                if (line.isEmpty()) continue;
+                if (!line.isEmpty()) {
 
-                if (line.equalsIgnoreCase("Zeitraum:") || line.equalsIgnoreCase("Einfallspunkte:") || line.equalsIgnoreCase("Kreuzungen:")) {
-                    if (line.equalsIgnoreCase("Zeitraum:") && hasZeitraum) {
-                        throw new IllegalArgumentException(ERROR_MULTIPLE_TIMESPAN_SECTIONS);
-                    } else if (line.equalsIgnoreCase("Einfallspunkte:") && hasEinfallspunkte) {
-                        throw new IllegalArgumentException(ERROR_MULTIPLE_ENTRYPOINT_SECTIONS);
-                    } else if (line.equalsIgnoreCase("Kreuzungen:") && hasKreuzungen) {
-                        throw new IllegalArgumentException(ERROR_MULTIPLE_CROSSING_SECTIONS);
-                    }
-
-                    section = line;
-                    if (line.equalsIgnoreCase("Zeitraum:")) hasZeitraum = true;
-                    if (line.equalsIgnoreCase("Einfallspunkte:")) hasEinfallspunkte = true;
-                    if (line.equalsIgnoreCase("Kreuzungen:")) hasKreuzungen = true;
-                    continue;
-                }
-
-                switch (section) {
-                    case "Zeitraum:":
-                        String[] timeParts = line.split("\\s+");
-
-                        if (timeParts.length != 2) {
-                            throw new IllegalArgumentException(ERROR_INVALID_TIMESPAN_FORMAT);
+                    if (line.equalsIgnoreCase("Zeitraum:") || line.equalsIgnoreCase("Einfallspunkte:") || line.equalsIgnoreCase("Kreuzungen:")) {
+                        if (line.equalsIgnoreCase("Zeitraum:") && hasZeitraum) {
+                            throw new IllegalArgumentException(ERROR_MULTIPLE_TIMESPAN_SECTIONS);
+                        } else if (line.equalsIgnoreCase("Einfallspunkte:") && hasEinfallspunkte) {
+                            throw new IllegalArgumentException(ERROR_MULTIPLE_ENTRYPOINT_SECTIONS);
+                        } else if (line.equalsIgnoreCase("Kreuzungen:") && hasKreuzungen) {
+                            throw new IllegalArgumentException(ERROR_MULTIPLE_CROSSING_SECTIONS);
                         }
+                    //checkLine(line, hasZeitraum, hasEinfallspunkte, hasKreuzungen);
+                    
+                        section = line;
+                        if (line.equalsIgnoreCase("Zeitraum:")) hasZeitraum = true;
+                        if (line.equalsIgnoreCase("Einfallspunkte:")) hasEinfallspunkte = true;
+                        if (line.equalsIgnoreCase("Kreuzungen:")) hasKreuzungen = true;
+                    } else {
+                        switch (section) {
+                            case "Zeitraum:":
+                                String[] timeParts = line.split("\\s+");
 
-                        maxTime = checkMaxTime(timeParts[0]);
-                        clockrate = checkGeneralFrequency(timeParts[1], maxTime);
-                        break;
+                                if (timeParts.length != 2) {
+                                    throw new IllegalArgumentException(ERROR_INVALID_TIMESPAN_FORMAT);
+                                }
 
-                    case "Einfallspunkte:":
-                        parseEntryPoint(line, entryPoints, alreadyExistingCoords, referencesMadeByEntryPoints);
-                        break;
+                                maxTime = checkMaxTime(timeParts[0]);
+                                clockrate = checkGeneralFrequency(timeParts[1], maxTime);
+                                break;
 
-                    case "Kreuzungen:":
-                        parseIntersection(line, intersections, directedEdges, alreadyExistingCoords, referencesMadeByIntersections);
-                        break;
+                            case "Einfallspunkte:":
+                                parseEntryPoint(line, entryPoints, alreadyExistingCoords, referencesMadeByEntryPoints);
+                                break;
+
+                            case "Kreuzungen:":
+                                parseIntersection(line, intersections, directedEdges, alreadyExistingCoords, referencesMadeByIntersections);
+                                break;
+                        }
+                    }
                 }
             }
         } catch (IOException e) {
@@ -137,6 +149,18 @@ public class TextFileReader implements Reader {
         }
 
         return new CityDTO(entryPoints, intersections, directedEdges, clockrate, maxTime);
+    }
+
+    private static void checkLine(String line, boolean hasZeitraum, boolean hasEinfallspunkte, boolean hasKreuzungen) {
+        if (line.equalsIgnoreCase("Zeitraum:") || line.equalsIgnoreCase("Einfallspunkte:") || line.equalsIgnoreCase("Kreuzungen:")) {
+            if (line.equalsIgnoreCase("Zeitraum:") && hasZeitraum) {
+                throw new IllegalArgumentException(ERROR_MULTIPLE_TIMESPAN_SECTIONS);
+            } else if (line.equalsIgnoreCase("Einfallspunkte:") && hasEinfallspunkte) {
+                throw new IllegalArgumentException(ERROR_MULTIPLE_ENTRYPOINT_SECTIONS);
+            } else if (line.equalsIgnoreCase("Kreuzungen:") && hasKreuzungen) {
+                throw new IllegalArgumentException(ERROR_MULTIPLE_CROSSING_SECTIONS);
+            }
+        }
     }
 
     private static void validateFilePath(String filePath) {
@@ -219,13 +243,13 @@ public class TextFileReader implements Reader {
         // Format: Name X Y Ziel Takt
         String[] parts = line.split("\\s+");
 
-        if (parts.length != 5) {
+        if (parts.length != ENTRY_POINT_PARTS_COUNT) { //if the length is not 5 the format of EntryPoint coordinate x y destination frequency is invalid
             throw new IllegalArgumentException(ERROR_INVALID_ENTRY_POINT_FORMAT + line);
         }
 
         String name = parts[0];
 
-        if (name.length() > 100) {
+        if (name.length() > ENTRY_POINT_NAME_MAX_LENGTH) {
             throw new IllegalArgumentException(ERROR_ENTRY_POINT_NAME_TOO_LONG + name);
         }
 
@@ -233,18 +257,18 @@ public class TextFileReader implements Reader {
             throw new IllegalArgumentException(ERROR_DUPLICATE_ENTRY_POINT_NAME + name);
         }
 
-        double x = checkCoordinateComponent(parts[1]);
-        double y = checkCoordinateComponent(parts[2]);
+        double x = checkCoordinateComponent(parts[ENTRY_POINT_X_INDEX]);
+        double y = checkCoordinateComponent(parts[ENTRY_POINT_Y_INDEX]);
 
         Coord epCoord = new Coord(x, y);
 
         checkWhetherCoordIsFarEnough(coordChecker, epCoord);
 
-        String destination = parts[3];
+        String destination = parts[ENTRY_POINT_DEST_INDEX];
 
         referencesMadeByEntryPoints.add(destination);
 
-        int freq = Integer.parseInt(parts[4]);
+        int freq = Integer.parseInt(parts[ENTRY_POINT_FREQ_INDEX]);
 
         EntryPoint ep = new EntryPoint();
         ep.coord = new Coord(x, y);
@@ -293,15 +317,15 @@ public class TextFileReader implements Reader {
             throw new IllegalArgumentException(ERROR_INTERSECTION_NAME_TOO_LONG + name);
         }
 
-        if (parts.length < 7) { //length smaller than 7 means there can only be less than 2 destinations, the format is invalid
+        if (parts.length < MIN_CONNECTED_STREETS) { //length smaller than 7 means there can only be less than 2 destinations, the format is invalid
             throw new IllegalArgumentException(ERROR_TOO_FEW_CONNECTED_STREETS + line);
         }
 
-        if (parts.length % 2 != 1) { //if there are not an odd number of parts, it means that not each destination has a probability
+        if (parts.length % 2 != EXPECTED_ODD_PARTS) { //if there are not an odd number of parts, it means that not each destination has a probability
             throw new IllegalArgumentException(ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED + line);
         }
 
-        if(parts.length > 20){
+        if(parts.length > MAX_CONNECTED_STREETS){
             throw new IllegalArgumentException(ERROR_TOO_MANY_CONNECTED_STREETS + line);
         }
 
@@ -325,9 +349,18 @@ public class TextFileReader implements Reader {
             directedEdges.putIfAbsent(reverse, new DirectedEdgeInfo());
         }
 
-        double total = probs.stream().mapToDouble(Double::doubleValue).sum();
+        final double total;
+        {
+            double sum = 0;
+            for (Double prob : probs) {
+                sum += prob;
+            }
+            total = sum;
+        }
 
-        probs.replaceAll (aDouble -> aDouble / total); //normalize probabilities
+        for (int i = 0; i < probs.size(); i++) {
+            probs.set(i, probs.get(i) / total);
+        }
 
         Coord intersectionCoord = new Coord(x, y);
 
@@ -337,9 +370,16 @@ public class TextFileReader implements Reader {
 
         Intersection inter = new Intersection();
         inter.coord = intersectionCoord;
+
+        // Replace the stream-based conversion with a for-loop
+        double[] probabilitiesArray = new double[probs.size()];
+        for (int i = 0; i < probs.size(); i++) {
+            probabilitiesArray[i] = probs.get(i);
+        }
+
         inter.namesAndProbabilities = new NamesAndProbabilities(
             dests.toArray(new String[0]),
-            probs.stream().mapToDouble(Double::doubleValue).toArray()
+            probabilitiesArray
         );
 
         intersections.put(name, inter);

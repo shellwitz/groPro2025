@@ -70,9 +70,7 @@ public class TextFileReader implements Reader {
         int clockrate = 0;
         int maxTime = 0;
 
-        boolean hasZeitraum = false;
-        boolean hasEinfallspunkte = false;
-        boolean hasKreuzungen = false;
+        boolean[] hasZeitraumEinfallspunkteKreuzungen = {false, false, false};
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -83,19 +81,10 @@ public class TextFileReader implements Reader {
                 if (!line.isEmpty()) {
 
                     if (line.equalsIgnoreCase("Zeitraum:") || line.equalsIgnoreCase("Einfallspunkte:") || line.equalsIgnoreCase("Kreuzungen:")) {
-                        if (line.equalsIgnoreCase("Zeitraum:") && hasZeitraum) {
-                            throw new IllegalArgumentException(ERROR_MULTIPLE_TIMESPAN_SECTIONS);
-                        } else if (line.equalsIgnoreCase("Einfallspunkte:") && hasEinfallspunkte) {
-                            throw new IllegalArgumentException(ERROR_MULTIPLE_ENTRYPOINT_SECTIONS);
-                        } else if (line.equalsIgnoreCase("Kreuzungen:") && hasKreuzungen) {
-                            throw new IllegalArgumentException(ERROR_MULTIPLE_CROSSING_SECTIONS);
-                        }
-                    //checkLine(line, hasZeitraum, hasEinfallspunkte, hasKreuzungen);
+                  
+                    checkAndSetZeitraumEinfallspunkteKreuzungenSections(line, hasZeitraumEinfallspunkteKreuzungen);
                     
-                        section = line;
-                        if (line.equalsIgnoreCase("Zeitraum:")) hasZeitraum = true;
-                        if (line.equalsIgnoreCase("Einfallspunkte:")) hasEinfallspunkte = true;
-                        if (line.equalsIgnoreCase("Kreuzungen:")) hasKreuzungen = true;
+                    section = line;
                     } else {
                         switch (section) {
                             case "Zeitraum:":
@@ -124,43 +113,30 @@ public class TextFileReader implements Reader {
             throw new RuntimeException("Error reading file", e);
         }
 
-        if (entryPoints.isEmpty()) {
-            throw new IllegalArgumentException(ERROR_NO_ENTRY_POINTS);
-        }
-
-        if (intersections.isEmpty()) {
-            throw new IllegalArgumentException(ERROR_NO_INTERSECTIONS);
-        }
-
-        boolean noLocationsThatAreBothEntryPointAndIntersection = Collections.disjoint(entryPoints.keySet(), intersections.keySet());
-
-        if (!noLocationsThatAreBothEntryPointAndIntersection) {
-            throw new IllegalArgumentException(ERROR_DUPLICATE_LOCATIONS);
-        }
-
-        if (!intersections.keySet().containsAll(referencesMadeByEntryPoints)) {
-            throw new IllegalArgumentException(ERROR_INVALID_ENTRY_POINT_REFERENCE);
-        }
-
-        for (String reference : referencesMadeByIntersections) {
-            if (!entryPoints.containsKey(reference) && !intersections.containsKey(reference)) {
-                throw new IllegalArgumentException(ERROR_INVALID_INTERSECTION_REFERENCE);
-            }
-        }
+        validateCityData(entryPoints, intersections, referencesMadeByEntryPoints, referencesMadeByIntersections);
 
         return new CityDTO(entryPoints, intersections, directedEdges, clockrate, maxTime);
     }
 
-    private static void checkLine(String line, boolean hasZeitraum, boolean hasEinfallspunkte, boolean hasKreuzungen) {
-        if (line.equalsIgnoreCase("Zeitraum:") || line.equalsIgnoreCase("Einfallspunkte:") || line.equalsIgnoreCase("Kreuzungen:")) {
-            if (line.equalsIgnoreCase("Zeitraum:") && hasZeitraum) {
-                throw new IllegalArgumentException(ERROR_MULTIPLE_TIMESPAN_SECTIONS);
-            } else if (line.equalsIgnoreCase("Einfallspunkte:") && hasEinfallspunkte) {
-                throw new IllegalArgumentException(ERROR_MULTIPLE_ENTRYPOINT_SECTIONS);
-            } else if (line.equalsIgnoreCase("Kreuzungen:") && hasKreuzungen) {
-                throw new IllegalArgumentException(ERROR_MULTIPLE_CROSSING_SECTIONS);
-            }
-        }
+    private static void checkAndSetZeitraumEinfallspunkteKreuzungenSections(String line, boolean[] hasZeitraumEinfallspunkteKreuzungen){
+        checkLine(line, hasZeitraumEinfallspunkteKreuzungen);
+        setZeitraumEinfallspunkteKreuzungenIfFound(line, hasZeitraumEinfallspunkteKreuzungen);
+    }
+
+    private static void setZeitraumEinfallspunkteKreuzungenIfFound(String line, boolean[] hasZeitraumEinfallspunkteKreuzungen){
+        if (line.equalsIgnoreCase("Zeitraum:")) hasZeitraumEinfallspunkteKreuzungen[0] = true;
+        if (line.equalsIgnoreCase("Einfallspunkte:")) hasZeitraumEinfallspunkteKreuzungen[1] = true;
+        if (line.equalsIgnoreCase("Kreuzungen:")) hasZeitraumEinfallspunkteKreuzungen[2] = true;
+    }
+
+    private static void checkLine(String line, boolean[] hasZeitraumEinfallspunkteKreuzungen) {
+         if (line.equalsIgnoreCase("Zeitraum:") && hasZeitraumEinfallspunkteKreuzungen[0]) {
+                            throw new IllegalArgumentException(ERROR_MULTIPLE_TIMESPAN_SECTIONS);
+                        } else if (line.equalsIgnoreCase("Einfallspunkte:") && hasZeitraumEinfallspunkteKreuzungen[1]) {
+                            throw new IllegalArgumentException(ERROR_MULTIPLE_ENTRYPOINT_SECTIONS);
+                        } else if (line.equalsIgnoreCase("Kreuzungen:") && hasZeitraumEinfallspunkteKreuzungen[2]) {
+                            throw new IllegalArgumentException(ERROR_MULTIPLE_CROSSING_SECTIONS);
+                        }
     }
 
     private static void validateFilePath(String filePath) {
@@ -383,5 +359,31 @@ public class TextFileReader implements Reader {
         );
 
         intersections.put(name, inter);
+    }
+
+    private static void validateCityData(Map<String, EntryPoint> entryPoints, Map<String, Intersection> intersections, Set<String> referencesMadeByEntryPoints, Set<String> referencesMadeByIntersections) {
+        if (entryPoints.isEmpty()) {
+            throw new IllegalArgumentException(ERROR_NO_ENTRY_POINTS);
+        }
+
+        if (intersections.isEmpty()) {
+            throw new IllegalArgumentException(ERROR_NO_INTERSECTIONS);
+        }
+
+        boolean noLocationsThatAreBothEntryPointAndIntersection = Collections.disjoint(entryPoints.keySet(), intersections.keySet());
+
+        if (!noLocationsThatAreBothEntryPointAndIntersection) {
+            throw new IllegalArgumentException(ERROR_DUPLICATE_LOCATIONS);
+        }
+
+        if (!intersections.keySet().containsAll(referencesMadeByEntryPoints)) {
+            throw new IllegalArgumentException(ERROR_INVALID_ENTRY_POINT_REFERENCE);
+        }
+
+        for (String reference : referencesMadeByIntersections) {
+            if (!entryPoints.containsKey(reference) && !intersections.containsKey(reference)) {
+                throw new IllegalArgumentException(ERROR_INVALID_INTERSECTION_REFERENCE);
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Random;
 
@@ -149,15 +150,23 @@ public class City {
   }
 
   private void updateDirectedEdgesMaxima() {
-    for (Map.Entry<DirectedEdge, DirectedEdgeInfo> entry : directedEdges.entrySet()) {
+    for (Entry<DirectedEdge, DirectedEdgeInfo> entry : directedEdges.entrySet()) {
       DirectedEdgeInfo info = entry.getValue();
       info.updateMaxNum();
     }
   }
 
-  public List<Map.Entry<DirectedEdge, DirectedEdgeInfo>> getAlphabeticallySortedDirectedEdges(){
-    List<Map.Entry<DirectedEdge, DirectedEdgeInfo>> sortedEntries = new ArrayList<>(directedEdges.entrySet());
-    sortedEntries.sort(Comparator.comparing(entry -> entry.getKey().from + entry.getKey().to));
+  public List<Entry<DirectedEdge, DirectedEdgeInfo>> getAlphabeticallySortedDirectedEdges() {
+    List<Entry<DirectedEdge, DirectedEdgeInfo>> sortedEntries = new ArrayList<>(directedEdges.entrySet());
+    // Sort the entries based on the concatenation of from and to with anonynmous inner class
+    sortedEntries.sort(new Comparator<Entry<DirectedEdge, DirectedEdgeInfo>>() {
+        @Override
+        public int compare(Entry<DirectedEdge, DirectedEdgeInfo> entry1, Entry<DirectedEdge, DirectedEdgeInfo> entry2) {
+            String key1 = entry1.getKey().from + entry1.getKey().to;
+            String key2 = entry2.getKey().from + entry2.getKey().to;
+            return key1.compareTo(key2);
+        }
+    });
     return sortedEntries;
   }
 
@@ -165,7 +174,7 @@ public class City {
       for (int i = 1; i<= maxTime; ++i){
         updateVehicles ();
 
-        for(Map.Entry<String, EntryPoint> entry: entryPoints.entrySet ()){
+        for(Entry<String, EntryPoint> entry: entryPoints.entrySet ()){
           if(i % entry.getValue ().freq == 0){
             vehicles.add (createNewVehicle (Helper.getId (), entry.getKey (), entry.getValue ().intersectionName));
           }

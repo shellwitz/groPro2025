@@ -1,4 +1,4 @@
-package packagy;
+package trafficsimulation;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
-import static packagy.Coord.*;
+import static trafficsimulation.Coord.*;
 
 public class City {
 
@@ -17,7 +17,7 @@ public class City {
   private final HashMap<String, Intersection>           intersections;
   private final HashMap<DirectedEdge, DirectedEdgeInfo> directedEdges;
 
-  private final int frequency;
+  private final int clockRate;
   private final int maxTime;
 
   private final ArrayList<Vehicle>            vehicles       = new ArrayList<>();
@@ -29,10 +29,10 @@ public class City {
   public City(HashMap<String, EntryPoint> entryPoints,
               HashMap<String, Intersection> intersections,
               HashMap<DirectedEdge, DirectedEdgeInfo> directedEdges,
-              int frequency, int maxTime){
+              int clockRate, int maxTime){
     this.entryPoints = entryPoints;
     this.intersections = intersections;
-    this.frequency = frequency;
+    this.clockRate = clockRate;
     this.maxTime = maxTime;
     this.directedEdges = directedEdges;
 
@@ -41,7 +41,7 @@ public class City {
   public City(CityDTO cityDTO) {
     this.entryPoints = cityDTO.entryPoints;
     this.intersections = cityDTO.intersections;
-    this.frequency = cityDTO.frequency;
+    this.clockRate = cityDTO.clockRate;
     this.maxTime = cityDTO.maxTime;
     this.directedEdges = cityDTO.directedEdges;
   }
@@ -62,8 +62,8 @@ public class City {
     return vehicleHistory;
   }
 
-  public int getFrequency() {
-    return frequency;
+  public int getClockRate () {
+    return clockRate;
   }
 
   private void updateVehicle(Iterator<Vehicle> vehicleIterator){
@@ -173,7 +173,7 @@ public class City {
 
         updateDirectedEdgesMaxima();
 
-        if(i % frequency == 0){
+        if(i % clockRate == 0){
           updateVehicleHistory();
         }
 

@@ -1,0 +1,28 @@
+# Test file for ERROR_TOO_MANY_CONNECTED_STREETS
+# This file should trigger the error for too many connected streets.
+
+Zeitraum:
+3600 1
+
+Einfallspunkte:
+EntryPoint1 0 0 Intersection1 1
+EntryPoint2 1 1 Intersection1 1
+EntryPoint3 2 2 Intersection1 1
+EntryPoint4 3 3 Intersection1 1
+EntryPoint5 4 4 Intersection1 1
+EntryPoint6 5 5 Intersection1 1
+EntryPoint7 6 6 Intersection1 1
+EntryPoint8 7 7 Intersection1 1
+EntryPoint9 8 8 Intersection1 1
+EntryPoint10 9 9 Intersection1 1
+EntryPoint11 10 10 Intersection1 1
+EntryPoint12 11 11 Intersection1 1
+EntryPoint13 12 12 Intersection1 1
+EntryPoint14 13 13 Intersection1 1
+EntryPoint15 14 14 Intersection1 1
+EntryPoint16 15 15 Intersection1 1
+EntryPoint17 16 16 Intersection1 1
+EntryPoint18 17 17 Intersection1 1
+
+Kreuzungen:
+Intersection1 0 0 EntryPoint1 0.5 EntryPoint2 0.5 EntryPoint3 0.5 EntryPoint4 0.5 EntryPoint5 0.5 EntryPoint6 0.5 EntryPoint7 0.5 EntryPoint8 0.5 EntryPoint9 0.5 EntryPoint10 0.5 EntryPoint11 0.5 EntryPoint12 0.5 EntryPoint13 0.5 EntryPoint14 0.5 EntryPoint15 0.5 EntryPoint16 0.5 EntryPoint17 0.5 EntryPoint18 0.5

@@ -1,0 +1,13 @@
+# Test file for ERROR_TOO_FEW_CONNECTED_STREETS
+# This file should trigger the error for too few connected streets.
+
+Zeitraum:
+3600 1
+
+Einfallspunkte:
+EntryPoint1 0 0 Intersection1 1
+EntryPoint2 1 1 Intersection1 1
+EntryPoint3 2 2 Intersection1 1
+
+Kreuzungen:
+Intersection1 0 0

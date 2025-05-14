@@ -1,13 +1,12 @@
-package packagy.tests;
+package trafficsimulation.tests;
 
-import packagy.TextFileReader;
+import trafficsimulation.TextFileReader;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static packagy.TextFileReader.*;
+import static trafficsimulation.TextFileReader.*;
 
 public class BadInputTestRunner {
 
@@ -35,14 +34,15 @@ public class BadInputTestRunner {
         testCases.put("ERROR_INVALID_COORDINATE_COMPONENT.txt", ERROR_INVALID_COORDINATE_COMPONENT);
         testCases.put("ERROR_INVALID_ENTRY_POINT_REFERENCE.txt", ERROR_INVALID_ENTRY_POINT_REFERENCE);
         testCases.put("ERROR_INVALID_GENERAL_FREQUENCY.txt", ERROR_INVALID_GENERAL_FREQUENCY);
-        testCases.put("ERROR_INVALID_INTERSECTION_FORMAT.txt", ERROR_INVALID_INTERSECTION_FORMAT);
         testCases.put("ERROR_INVALID_INTERSECTION_REFERENCE.txt", ERROR_INVALID_INTERSECTION_REFERENCE);
         testCases.put("ERROR_INVALID_MAX_TIME.txt", ERROR_INVALID_MAX_TIME);
         testCases.put("ERROR_INVALID_PROBABILITY.txt", ERROR_INVALID_PROBABILITY);
-        testCases.put("ERROR_INVALID_PROBABILITY_SUM.txt", ERROR_INVALID_PROBABILITY_SUM);
         testCases.put("ERROR_MULTIPLE_TIMESPAN_SECTIONS.txt", ERROR_MULTIPLE_TIMESPAN_SECTIONS);
         testCases.put("ERROR_NOT_UTF8.jpeg", ERROR_NOT_UTF8);
         testCases.put("nonExistentFilePath", ERROR_INVALID_FILE_PATH);
+        testCases.put("ERROR_TOO_MANY_CONNECTED_STREETS.txt", ERROR_TOO_MANY_CONNECTED_STREETS);
+        testCases.put("ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED.txt", ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED);
+        testCases.put("ERROR_TOO_FEW_CONNECTED_STREETS.txt", ERROR_TOO_FEW_CONNECTED_STREETS);
 
         boolean allTestsPassed = true;
 

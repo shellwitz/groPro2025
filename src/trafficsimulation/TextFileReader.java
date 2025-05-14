@@ -1,4 +1,4 @@
-package packagy;
+package trafficsimulation;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -23,15 +23,17 @@ public class TextFileReader implements Reader {
     public static final String ERROR_INVALID_GENERAL_FREQUENCY    = "Ungültiger Wert für allgemeine Frequenz: ";
     public static final String ERROR_COORDINATES_TOO_CLOSE        = "Koordinaten sind zu nah beieinander: ";
     public static final String ERROR_INVALID_COORDINATE_COMPONENT = "Ungültiger Wert für Koordinatenkomponente: ";
-    public static final String ERROR_INVALID_PROBABILITY = "Ungültiger Wert für Wahrscheinlichkeit in Prozent: ";
+    public static final String ERROR_INVALID_PROBABILITY = "Ungültiger Wert für Wahrscheinlichkeit: ";
     public static final String ERROR_INVALID_ENTRY_POINT_FORMAT = "Ungültiges Format für Einfallspunkt: ";
     public static final String ERROR_DUPLICATE_ENTRY_POINT_NAME = "Doppelter Einfallspunktname: ";
     public static final String ERROR_INVALID_INTERSECTION_FORMAT = "Ungültiges Format für Kreuzung: ";
+    public static final String ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED = "Ungültiges Format für Kreuzung, alle Ortsangaben werden mit relativen Wahrscheinlichkeiten erwartet: ";
+    public static final String ERROR_TOO_FEW_CONNECTED_STREETS   = "Diese Kreuzung hat eventuell zu wenig verbindende Straßen: ";
     public static final String ERROR_DUPLICATE_INTERSECTION_NAME = "Doppelter Kreuzungsname: ";
-    public static final String ERROR_INVALID_PROBABILITY_SUM = "Wahrscheinlichkeiten müssen 1 ergeben: ";
     public static final String ERROR_ENTRY_POINT_NAME_TOO_LONG = "Einfallspunktname ist zu lang: ";
     public static final String ERROR_INTERSECTION_NAME_TOO_LONG = "Kreuzungsname ist zu lang: ";
     public static final String ERROR_INVALID_FILE_PATH = "Der angegebene Dateipfad existiert nicht oder ist keine gültige Datei: ";
+    public static final String ERROR_TOO_MANY_CONNECTED_STREETS = "Diese Kreuzung hat eventuell zu viele verbindende Straßen: ";
 
     private final String filePath;
 
@@ -54,7 +56,7 @@ public class TextFileReader implements Reader {
         HashSet<String> referencesMadeByEntryPoints = new HashSet<>();
         HashSet<String> referencesMadeByIntersections = new HashSet<>();
 
-        int frequency = 0;
+        int clockrate = 0;
         int maxTime = 0;
 
         boolean hasZeitraum = false;
@@ -94,7 +96,7 @@ public class TextFileReader implements Reader {
                         }
 
                         maxTime = checkMaxTime(timeParts[0]);
-                        frequency = checkGeneralFrequency(timeParts[1], maxTime);
+                        clockrate = checkGeneralFrequency(timeParts[1], maxTime);
                         break;
 
                     case "Einfallspunkte:":
@@ -134,7 +136,7 @@ public class TextFileReader implements Reader {
             }
         }
 
-        return new CityDTO(entryPoints, intersections, directedEdges, frequency, maxTime);
+        return new CityDTO(entryPoints, intersections, directedEdges, clockrate, maxTime);
     }
 
     private static void validateFilePath(String filePath) {
@@ -265,15 +267,15 @@ public class TextFileReader implements Reader {
         }
     }
 
-    private static double checkProbabilityInPercentage(String potentialProbabilityInPercentage) {
+    private static double checkProbability (String potentialProbability) {
         try {
-            double ret = Double.parseDouble(potentialProbabilityInPercentage);
-            if (ret < 0 || ret > 100) {
-                throw new IllegalArgumentException(ERROR_INVALID_PROBABILITY + potentialProbabilityInPercentage + ". Erwartet wird eine Zahl zwischen 0 und 100.");
+            double ret = Double.parseDouble(potentialProbability);
+            if (ret < 0 || ret > Math.pow(10, 6)) {
+                throw new IllegalArgumentException(ERROR_INVALID_PROBABILITY + potentialProbability + ". Erwartet wird eine Zahl zwischen 0 und 1 000 000.");
             }
-            return ret / 100;
+            return ret;
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(ERROR_INVALID_PROBABILITY + potentialProbabilityInPercentage + ". Erwartet wird eine Zahl mit einem Dezimalpunkt als Trennzeichen.");
+            throw new IllegalArgumentException(ERROR_INVALID_PROBABILITY + potentialProbability + ". Erwartet wird eine Zahl mit einem Dezimalpunkt als Trennzeichen.");
         }
     }
 
@@ -291,12 +293,16 @@ public class TextFileReader implements Reader {
             throw new IllegalArgumentException(ERROR_INTERSECTION_NAME_TOO_LONG + name);
         }
 
-        if (parts.length < 9) {
-            throw new IllegalArgumentException(ERROR_INVALID_INTERSECTION_FORMAT + line);
+        if (parts.length < 7) { //length smaller than 7 means there can only be less than 2 destinations, the format is invalid
+            throw new IllegalArgumentException(ERROR_TOO_FEW_CONNECTED_STREETS + line);
         }
 
-        if (parts.length % 2 != 1) {
-            throw new IllegalArgumentException(ERROR_INVALID_INTERSECTION_FORMAT + line);
+        if (parts.length % 2 != 1) { //if there are not an odd number of parts, it means that not each destination has a probability
+            throw new IllegalArgumentException(ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED + line);
+        }
+
+        if(parts.length > 20){
+            throw new IllegalArgumentException(ERROR_TOO_MANY_CONNECTED_STREETS + line);
         }
 
         double x = checkCoordinateComponent(parts[1]);
@@ -307,11 +313,11 @@ public class TextFileReader implements Reader {
 
         for (int i = 3; i < parts.length; i += 2) {
             String dest = parts[i];
-            double relProb = checkProbabilityInPercentage(parts[i + 1]);
+            double relProb = checkProbability (parts[i + 1]);
             dests.add(dest);
             probs.add(relProb);
 
-            // DirectedEdge in beide Richtungen hinzufügen
+            // adding DirectedEdges in both directions
             DirectedEdge forward = new DirectedEdge(name, dest);
             DirectedEdge reverse = new DirectedEdge(dest, name);
 
@@ -320,9 +326,8 @@ public class TextFileReader implements Reader {
         }
 
         double total = probs.stream().mapToDouble(Double::doubleValue).sum();
-        if (Math.abs(total - 1.0) > 0.0001) { //0.0001 is a small tolerance for floating point comparison
-            throw new IllegalArgumentException(ERROR_INVALID_PROBABILITY_SUM + line);
-        }
+
+        probs.replaceAll (aDouble -> aDouble / total); //normalize probabilities
 
         Coord intersectionCoord = new Coord(x, y);
 

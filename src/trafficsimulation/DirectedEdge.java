@@ -1,4 +1,4 @@
-package packagy;
+package trafficsimulation;
 
 import java.util.Objects;
 

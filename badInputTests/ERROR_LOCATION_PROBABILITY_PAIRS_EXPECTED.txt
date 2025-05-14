@@ -1,0 +1,14 @@
+# Test file for ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED
+# This file should trigger the error for invalid location-probability pairs.
+
+Zeitraum:
+3600 1
+
+Einfallspunkte:
+EntryPoint1 0 0 Intersection1 1
+EntryPoint2 3 3 Intersection1 1
+EntryPoint3 5 5 Intersection1 1
+EntryPoint4 4 4 Intersection1 1
+
+Kreuzungen:
+Intersection1 0 0 EntryPoint1 EntryPoint3 EntryPoint4 EntryPoint2 0.5

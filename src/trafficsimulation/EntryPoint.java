@@ -1,4 +1,4 @@
-package packagy;
+package trafficsimulation;
 
 public class EntryPoint {
   public Coord coord;

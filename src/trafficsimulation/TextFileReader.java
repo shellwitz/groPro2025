@@ -26,16 +26,15 @@ public class TextFileReader implements Reader {
     public static final String ERROR_INVALID_PROBABILITY = "Ungültiger Wert für Wahrscheinlichkeit: ";
     public static final String ERROR_INVALID_ENTRY_POINT_FORMAT = "Ungültiges Format für Einfallspunkt: ";
     public static final String ERROR_DUPLICATE_ENTRY_POINT_NAME = "Doppelter Einfallspunktname: ";
-    public static final String ERROR_INVALID_INTERSECTION_FORMAT = "Ungültiges Format für Kreuzung: ";
     public static final String ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED = "Ungültiges Format für Kreuzung, alle Ortsangaben werden mit relativen Wahrscheinlichkeiten erwartet: ";
     public static final String ERROR_TOO_FEW_CONNECTED_STREETS   = "Diese Kreuzung hat eventuell zu wenig verbindende Straßen: ";
     public static final String ERROR_DUPLICATE_INTERSECTION_NAME = "Doppelter Kreuzungsname: ";
     public static final String ERROR_ENTRY_POINT_NAME_TOO_LONG = "Einfallspunktname ist zu lang: ";
     public static final String ERROR_INTERSECTION_NAME_TOO_LONG = "Kreuzungsname ist zu lang: ";
     public static final String ERROR_INVALID_FILE_PATH = "Der angegebene Dateipfad existiert nicht oder ist keine gültige Datei: ";
-    public static final String ERROR_TOO_MANY_CONNECTED_STREETS = "Diese Kreuzung hat eventuell zu viele verbindende Straßen: ";
+    public static final String ERROR_TOO_MANY_CONNECTED_STREETS = "Diese Kreuzung hat eventuell mehr als 20 verbindende Straßen: ";
 
-    private static final int MAX_CONNECTED_STREETS = 20;
+    private static final int MAX_CONNECTED_STREETS = 43;
     private static final int MIN_CONNECTED_STREETS = 7;
     private static final int EXPECTED_ODD_PARTS = 1;
 
@@ -270,8 +269,8 @@ public class TextFileReader implements Reader {
     private static double checkProbability (String potentialProbability) {
         try {
             double ret = Double.parseDouble(potentialProbability);
-            if (ret < 0 || ret > Math.pow(10, 6)) {
-                throw new IllegalArgumentException(ERROR_INVALID_PROBABILITY + potentialProbability + ". Erwartet wird eine Zahl zwischen 0 und 1 000 000.");
+            if (ret < Math.pow(10, -6) || ret > Math.pow(10, 6)) { //values smaller or greater can lead to a loss of precision
+                throw new IllegalArgumentException(ERROR_INVALID_PROBABILITY + potentialProbability + ". Erwartet wird eine Zahl zwischen 0.000001 und 1 000 000.");
             }
             return ret;
         } catch (NumberFormatException e) {

@@ -1,0 +1,9 @@
+Zeitraum:
+50 3
+
+Kreuzungen:
+B 0 1 A 20 C 30
+
+Einfallspunkte:
+A 0 0 B 2
+C 1 0.0 B 5

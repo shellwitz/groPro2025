@@ -24,8 +24,27 @@ welche Straßen rechts sind. Dafür würde man die xy Komponenten des Anfangs En
 um den links orthogonalen Vektor zu dem gerade gefahrenen Straßenvektor zu erhalten. Nun findet man alle directedEdges bei denen to der Kreuzung entspricht an der abgebogen werden soll.
 Von diesen sind die Straßen rechts, bei denen das Skalarprodukt des links orthogonalen Vektor mit dem Anfangs End Vektor der potentiellen rechts Straße größer 0 ist.
 
-Jetzt muss berechnet werden, ob mehrere Autos in einem vorher festgelegten Zeitraum an wie oben beschriebenen Straßen an einer Kreuzung stehen.
+Jetzt müsste berechnet werden, ob mehrere Autos in einem vorher festgelegten Zeitraum an wie oben beschriebenen Straßen an einer Kreuzung stehen.
+Für eine richtige Implementation müsste vorher geklärt werden, wie groß der Zeitraum ist, den Autos bei Rechts vor Links auf andere Autos warten müssten
+und wie weit entfernt Fahrzeuge maximal von einem an einer Kreuzung wartendem Fahrzeug sein könne, damit die Rechts vor Links Regelung gilt. 
 Für Stadtpläne mit niedrigen Einfallspunkttaktraten könnte es jedoch zu deadlocks führen, wenn an einer Kreuzung jedes Auto auf das Auto rechts warten muss.
 
 Mehrere Fahrbahnen pro Strecke erfordern eine Lockerung des Einleseformats,
-so müssen doppelte Einfallspunktzeilen, wo sich lediglich die Taktrate unterscheidet zugelassen werden. 
+so müssen doppelte Einfallspunktzeilen, wo sich lediglich die Taktrate unterscheidet zugelassen werden.
+Zudem müssen auch in Kreuzungszeilen mehrfach die gleichen Abbiegenamen mit anderen Wahrscheinlichkeiten zugelassen werden.
+
+Ein Problem bei der jetzigen Implementierung ist die Verwendung von HashMaps. Diese erlauben nicht mehrfach gleiche Schlüssel.
+Ein Trick könnte die Durchnummerierung der Punkte vor dem Anwenden der Hashfunktion sein, sodass ein Einfallspunkt mit zwei
+Fahrbahnen z.B. als zwei Punkte mit den gleichen Koordinaten B1 und B2 gehand habt werden.
+Hierbei ist natürlich zu überprüfen, dass nicht schon ein Punkt B2 existiert. Eine sauberere Lösung wäre eine Ort Klasse mit einer ID und einem String als Namen und die Verwendung einer solchen
+Klasse in Hashmaps (natürlich müsste vorher Vergleichen und die Hashfunktion überschrieben werden).
+
+Nicht konstante Geschwindigkeiten, welche abhängig von Streckenabschnitten sind könnten Erfordern eine Modifikation der dafür zuständigen DirectedEdgeInfos.
+In solch einem Fall würde jede DirectedEdgeInfo einen Geschwindigkeitsparameter haben oder eine Funktion, welche die Geschwindigkeit von sich auf dem jeweiligem
+Straßenabschnitt befindenden Fahrzeugen ändern kann.
+Für eine Implementierung ist der genaue Geschwindigkeitsänderungsmechanismus erforderlich.
+
+Für die oben beschriebenen potentiellen Folgeanforderungen kann zudem die Benutzung von Polymorphismus hilfreich sein.
+So kann beispielsweise DirectedEdgeInfo oder Vehicle eine Basisklasse sein von der für andere Simulationsmodi erbende Klassen benutzt werden.
+
+

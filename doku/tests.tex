@@ -1,0 +1,46 @@
+\chapter{Tests}
+
+Das Verifizieren, ob die Ausgabedateien korrekt sind,
+lässt sich aufgrund der zufälligen Natur der Simulation und der fehlenden Vergleichsmöglichkeiten mit erwartetem Output
+nur visuell über das PLot.py Skript.
+
+Die Normalfälle von der IHK Website getestet und visuell als passend empfunden.
+Ein Fokus wurde auf das Testen von Fehler und Grenzfällen bei der Einlese gelegt.
+
+Hierfür wurde ein Ordner namens badInputTests erstellt und
+
+\section{Ausführen der Tests}
+
+\subsection{BadInputTestRunner}
+
+Bei der Arbeit an dem TextFileReader wurde mehrfach refactored und die Bedingungsprüfungen wurden nacheinander implementiert und nach jeder Bedingung geprüft, 
+ob frühere Fehlerfälle immer noch die erwartete Ausgabe liefern. 
+Um diesen Prozess zu automatisieren, wurde das \texttt{BadInputTestRunner}-Testprogramm für Regressionstests geschrieben.
+
+Der Quellcode ist die gleichnamige Java-Datei im \texttt{tests}-Ordner, ebenfalls im \\
+\texttt{trafficsimulation}-Package. 
+Das Programm führt die folgenden Schritte aus:
+
+\begin{itemize}
+    \item \textbf{Verzeichnisprüfung:} Es wird geprüft, ob das Verzeichnis \texttt{badInputTests} existiert und Eingabedateien enthält.
+    \item \textbf{Definition der Testfälle:} Für jede fehlerhafte Eingabedatei wird die erwartete Fehlermeldung definiert. Beispiele für Fehler sind:
+    \begin{itemize}
+        \item Fehlende Einfallspunkte (\texttt{ERROR\_NO\_ENTRY\_POINTS}),
+        \item Ungültige Koordinaten (\texttt{ERROR\_INVALID\_COORDINATE\_COMPONENT})
+    \end{itemize}
+    \item \textbf{Testausführung:} Jede Eingabedatei wird mit dem \texttt{TextFileReader} eingelesen. Falls die Datei fehlerhaft ist, wird eine Ausnahme ausgelöst.
+    \item \textbf{Ergebnisprüfung:} Die tatsächliche Fehlermeldung wird mit der erwarteten Fehlermeldung verglichen. Stimmen sie überein, gilt der Test als bestanden.
+    \item \textbf{Endergebnis:} Am Ende wird eine Übersicht ausgegeben, ob alle Tests bestanden wurden oder ob Fehler aufgetreten sind.
+\end{itemize}
+
+
+Zum Testen des Programms steht je ein Skript für Windows und Linux/macOS zur Verfügung. Unter Windows wird das Skript \texttt{test\_run.bat} verwendet.
+Es führt die Datei \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} einzeln aus und übergibt sie als Argument an das Programm.
+
+Zur Ausführung müssen alle Eingabedateien im Verzeichnis \texttt{input\_files} liegen und sich die \texttt{.jar}-Datei im gleichen Ordner wie das Skript befinden.
+Das Skript kann entweder per Doppelklick oder über die Eingabeaufforderung mit \texttt{test\_run.bat} gestartet werden.
+
+Für Linux oder macOS wird das Bash-Skript \texttt{test\_run.sh} genutzt. Auch hier wird die \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} aufgerufen.
+
+Vor dem ersten Ausführen muss dem Skript Ausführungsrecht gegeben werden, z.\,B.\ durch den Befehl \texttt{chmod +x test\_run.sh}. Danach kann es mit \texttt{./test\_run.sh} ausgeführt werden.
+Alternativ kann das Skript auch ohne Ausführungsrecht mit \texttt{bash test\_run.sh} gestartet werden.

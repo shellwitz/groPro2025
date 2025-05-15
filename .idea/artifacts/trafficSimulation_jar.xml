@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="groPro2025:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/groPro2025_jar</output-path>
-    <root id="archive" name="groPro2025.jar">
+  <artifact type="jar" name="trafficSimulation:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/trafficSimulation_jar</output-path>
+    <root id="archive" name="trafficSimulation.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>

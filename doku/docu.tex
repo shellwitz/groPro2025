@@ -84,14 +84,10 @@ Unterschrift
 
 \include{procedureDescription}
 
-\section{Beschreibung Ausgabedatei}
-<Inhalt einfügen>
-
-
+\include{tests}
 
 \chapter{Zusammenfassung und Ausblick}
 
-\chapter {Tests}
 
 
 \appendix
@@ -118,19 +114,6 @@ Beispiel:
 
 \texttt{java -jar MeinProgramm.jar C:\textbackslash Users\textbackslash debel\textbackslash input.txt}
 
-
-Das Programm verarbeitet die angegebene Datei und gibt die Ergebnisse entsprechend aus.
-
-Zum Testen des Programms steht je ein Skript für Windows und Linux/macOS zur Verfügung. Unter Windows wird das Skript \texttt{test\_run.bat} verwendet.
-Es führt die Datei \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} einzeln aus und übergibt sie als Argument an das Programm.
-
-Zur Ausführung müssen alle Eingabedateien im Verzeichnis \texttt{input\_files} liegen und sich die \texttt{.jar}-Datei im gleichen Ordner wie das Skript befinden.
-Das Skript kann entweder per Doppelklick oder über die Eingabeaufforderung mit \texttt{test\_run.bat} gestartet werden.
-
-Für Linux oder macOS wird das Bash-Skript \texttt{test\_run.sh} genutzt. Auch hier wird die \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} aufgerufen.
-
-Vor dem ersten Ausführen muss dem Skript Ausführungsrecht gegeben werden, z.\,B.\ durch den Befehl \texttt{chmod +x test\_run.sh}. Danach kann es mit \texttt{./test\_run.sh} ausgeführt werden.
-Alternativ kann das Skript auch ohne Ausführungsrecht mit \texttt{bash test\_run.sh} gestartet werden.
 
 
 \chapter{Entwicklungsumgebung}

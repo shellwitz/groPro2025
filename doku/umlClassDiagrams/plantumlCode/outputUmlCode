@@ -1,0 +1,20 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam style strictuml
+  class PlanWriter {
+    + write(filePath: String, alphabeticallySortedDirectedEdges: List<Map.Entry<DirectedEdge, DirectedEdgeInfo>>, entryPoints: Map<String, EntryPoint>, intersections: Map<String, Intersection>): void
+    + getCoord(name: String, entryPoints: Map<String, EntryPoint>, intersections: Map<String, Intersection>): Coord
+  }
+
+  class StatisticWriter {
+    + write(filePath: String, alphabeticallySortedDirectedEdges: List<Map.Entry<DirectedEdge, DirectedEdgeInfo>>, entryPoints: Map<String, EntryPoint>, intersections: Map<String, Intersection>): void
+  }
+
+  class VehicleWriter {
+    + write(filePath: String, vehicleHistory: ArrayList<ArrayList<Vehicle>>, frequency: int): void
+  }
+
+
+  StatisticWriter ..> PlanWriter : uses static
+
+@enduml

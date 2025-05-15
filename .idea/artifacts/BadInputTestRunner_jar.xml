@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BadInputTestRunner:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BadInputTestRunner_jar</output-path>
+    <root id="archive" name="BadInputTestRunner.jar">
+      <element id="module-output" name="groPro2025" />
+    </root>
+  </artifact>
+</component>

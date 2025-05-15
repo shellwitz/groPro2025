@@ -210,17 +210,14 @@ Das folgende Klassen-Diagramm zeigt die Struktur der City-Klasse und die nachfol
 
 \begin{figure}[h!]
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.3\textwidth]{nassis/City/updateVehicles-0.pdf}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.3\textwidth]{nassis/City/updateVehiclesAndCreateNewVehiclesCombined.pdf}}
 \end{figure}
+
 
 \begin{figure}[h!]
     \centering
-    \makebox[\textwidth][c]{\includegraphics[width=1.3\textwidth]{nassis/City/createNewVehicle-3.pdf}}
+    \makebox[\textwidth][c]{\includegraphics[width=1.3\textwidth]{nassis/City/updateMaximaAndHistory.pdf}}
 \end{figure}
-
-
-
-
 
 
 Darüber hinaus stellt die Klasse Funktionen zur Verfügung,
@@ -241,6 +238,16 @@ Nach Abschluss der Simulation werden die Ergebnisse in drei getrennte Ausgabedat
   \end{center}
   wobei \texttt{x1 y1} die Start- und \texttt{x2 y2} die Zielposition einer Kante angeben. Die Ausgabe erfolgt alphabetisch sortiert nach Start- und Zielnamen.
 
+  \FloatBarrier
+    \vspace{-2cm} 
+\begin{figure}[h!]
+    \vspace{-2cm} 
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.05\textwidth]{nassis/Output/write-4.pdf}}
+\end{figure}
+
+\clearpage
+
   \item \textbf{\texttt{Statistik.txt} (Klasse \texttt{StatisticWriter})} \\
   Für jede Kante werden zwei Werte normiert auf 100 Meter Straßenlänge berechnet und ausgegeben:
   \begin{itemize}
@@ -250,6 +257,16 @@ Nach Abschluss der Simulation werden die Ergebnisse in drei getrennte Ausgabedat
   Beide Werte werden berechnet, indem die Rohwerte durch die euklidische Länge der jeweiligen Kante geteilt werden, wobei die Berechnung auf 100 Meter normiert ist.
   Die Ausgabe erfolgt ebenfalls alphabetisch sortiert nach Start- und Zielnamen.
 
+  \FloatBarrier
+      \vspace{-2cm} 
+\begin{figure}[h!]
+        \vspace{-2cm} 
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.05\textwidth]{nassis/Output/writeStats.pdf}}
+\end{figure}
+
+\clearpage
+
   \item \textbf{\texttt{Fahrzeuge.txt} (Klasse \texttt{VehicleWriter})} \\
   Diese Datei protokolliert die Positionen aller Fahrzeuge zu bestimmten Zeitpunkten der Simulation (gesteuert durch den Parameter \texttt{clockRate}). Jeder Zeitstempel ist mit \texttt{*** t = <Sekunden>} markiert. Darunter folgen Zeilen mit:
   \begin{center}
@@ -257,6 +274,23 @@ Nach Abschluss der Simulation werden die Ergebnisse in drei getrennte Ausgabedat
   \end{center}
   Dadurch kann der zeitliche Verlauf der Fahrzeugbewegungen nachvollzogen werden. Die Daten stammen aus der \texttt{vehicleHistory}.
 \end{itemize}
+
+\FloatBarrier
+        \vspace{-2cm} 
+\begin{figure}[h!]
+            \vspace{-2cm} 
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=1.05\textwidth]{nassis/Output/writeVehicles.pdf}}
+\end{figure}
+\FloatBarrier
+\vspace{-2cm}
+\begin{figure}[h!]
+    \vspace{-2cm}
+    \centering
+    \caption{Klassenstruktur der Ausgabeklassen}
+    \makebox[\textwidth][c]{\includegraphics[width=1.05\textwidth]{umlClassDiagrams/outputUml.png}}
+\end{figure}
+
 
 \clearpage
 
@@ -304,5 +338,12 @@ Nach Abschluss der Simulation werden die Ergebnisse in drei getrennte Ausgabedat
     \item \texttt{VehicleWriter.write}: Ausgabe aller Fahrzeugpositionen zu gespeicherten Zeitpunkten in \texttt{Fahrzeuge.txt}.
   \end{itemize}
 \end{enumerate}
+
+\begin{figure}[h!]
+    \centering
+    \caption{Hauptablauf der Simulation}
+    \makebox[\textwidth][c]{\includegraphics[width=1.3\textwidth]{umlClassDiagrams/MainSequenceDiagram.png}}
+\end{figure}
+
 
 

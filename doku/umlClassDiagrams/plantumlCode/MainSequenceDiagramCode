@@ -1,0 +1,45 @@
+@startuml
+skinparam style strictuml
+skinparam participantStyle rectangle
+skinparam shadowing false
+skinparam sequence {
+  boxPadding 5
+  participantPadding 10
+  actorBorderThickness 0
+  lifelineThickness 1
+  lifeLineBorderColor black
+}
+
+actor Benutzer
+participant Main
+participant TextFileReader
+participant CityDTO
+participant City
+participant PlanWriter
+participant StatisticWriter
+participant VehicleWriter
+
+Benutzer -> Main: Programmstart
+
+Main -> TextFileReader: read(filePath)
+TextFileReader -> TextFileReader: Parsen der Datei\n(Zeitraum, Einfallspunkte, Kreuzungen)
+TextFileReader --> Main: CityDTO
+
+Main -> City: new City(CityDTO)
+
+Main -> City: simulate()
+loop t = 1 to maxTime
+    City -> City: updateVehicles()
+    City -> City: ggf. createNewVehicle()
+    City -> City: updateDirectedEdgesMaxima()
+    alt t % clockRate == 0
+        City -> City: updateVehicleHistory()
+    end
+end
+
+Main -> PlanWriter: write(Plan.txt)
+Main -> StatisticWriter: write(Statistik.txt)
+Main -> VehicleWriter: write(Fahrzeuge.txt)
+
+Main --> Benutzer: Ausgabe erzeugt und gespeichert
+@enduml

@@ -11,7 +11,12 @@ import static trafficsimulation.TextFileReader.*;
 public class BadInputTestRunner {
 
     public static void main(String[] args) {
-        String badInputDirPath = "badInputTests";
+        String badInputDirPath;
+        if(args.length > 0){
+            badInputDirPath = args[0];
+        }else{
+            badInputDirPath = "badInputTests";
+        }
         File badInputDir = new File(badInputDirPath);
 
         // Ensure the directory exists

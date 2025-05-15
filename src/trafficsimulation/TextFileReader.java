@@ -20,7 +20,7 @@ public class TextFileReader implements Reader {
     public static final String ERROR_INVALID_ENTRY_POINT_REFERENCE = "Nicht alle Referenzen von Einfallspunkten existieren tatsächlich.";
     public static final String ERROR_INVALID_INTERSECTION_REFERENCE = "Nicht alle Referenzen von Kreuzungen existieren tatsächlich.";
     public static final String ERROR_INVALID_MAX_TIME = "Ungültiger Wert für die Simulationszeitspanne: ";
-    public static final String ERROR_INVALID_GENERAL_FREQUENCY    = "Ungültiger Wert für allgemeine Frequenz: ";
+    public static final String ERROR_INVALID_GENERAL_FREQUENCY    = "Ungültiger Wert für allgemeine Taktrate: ";
     public static final String ERROR_COORDINATES_TOO_CLOSE        = "Koordinaten sind zu nah beieinander: ";
     public static final String ERROR_INVALID_COORDINATE_COMPONENT = "Ungültiger Wert für Koordinatenkomponente: ";
     public static final String ERROR_INVALID_PROBABILITY = "Ungültiger Wert für Wahrscheinlichkeit: ";

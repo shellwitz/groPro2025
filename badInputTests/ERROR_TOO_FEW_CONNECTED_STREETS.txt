@@ -10,4 +10,4 @@ EntryPoint2 1 1 Intersection1 1
 EntryPoint3 2 2 Intersection1 1
 
 Kreuzungen:
-Intersection1 0 0
+Intersection1 0 0 EntryPoint1 2

@@ -7,7 +7,588 @@ nur visuell über das PLot.py Skript.
 Die Normalfälle von der IHK Website getestet und visuell als passend empfunden.
 Ein Fokus wurde auf das Testen von Fehler und Grenzfällen bei der Einlese gelegt.
 
-Hierfür wurde ein Ordner namens badInputTests erstellt und
+Hierfür wurde ein Ordner namens badInputTests erstellt
+
+\section{Fehlerfälle}
+\textbf{Testfall: Koordinaten zu nah beieinander} \\
+Datei: \texttt{ERROR\_COORDINATES\_TOO\_CLOSE.txt}
+
+\begin{lstlisting}
+# Test case: Coordinates too close
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+C 0.05 0.05 B 5
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: In diesem Testfall befinden sich die Punkte A und C zu nah beieinander.
+Die Mindestdistanz zwischen zwei Punkten muss mindestens 0.1 Einheiten betragen, um gültig zu sein.
+
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Koordinaten sind zu nah beieinander...“ ausgegeben.
+\clearpage
+
+\textbf{Testfall: Doppelte Einfallspunktnamen} \\
+Datei: \texttt{ERROR\_DUPLICATE\_ENTRY\_POINT\_NAME.txt}
+
+\begin{lstlisting}
+# Test case: Duplicate entry point name
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+A 1 1 C 3
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: In diesem Testfall wird der Name A für zwei Einfallspunkte verwendet.
+Einfallspunktnamen müssen eindeutig sein.
+
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Doppelter Einfallspunktname: ...“ ausgegeben.
+
+
+\textbf{Testfall: Doppelte Kreuzungsnamen} \\
+Datei: \texttt{ERROR\_DUPLICATE\_INTERSECTION\_NAME.txt}
+
+\begin{lstlisting}
+# Test case: Duplicate intersection name
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+B 1 1 D 20 F 30 G 50
+\end{lstlisting}
+
+Beschreibung: In diesem Testfall wird der Name B für zwei Kreuzungen verwendet.
+Kreuzungsnamen müssen eindeutig sein.
+
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Doppelter Kreuzungsname: ...“ ausgegeben.
+
+\clearpage
+\textbf{Testfall: Einfallspunkt und Kreuzung doppelt verwendet} \\
+Datei: \texttt{ERROR\_DUPLICATE\_LOCATIONS.txt}
+
+\begin{lstlisting}
+# Not unique entrypoints and intersections
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+B 0 2 D 3
+C 0 4 D 5
+D 2 2 E 2
+E 4 2 G 5
+
+Kreuzungen:
+B 0 17 A 20 C 20 E 60
+E 4 42 D 40 F 10 G 50
+\end{lstlisting}
+
+Beschreibung: In diesem Testfall tauchen die Orte B und E sowohl als Einfallspunkte als auch als Kreuzungen auf, was nicht erlaubt ist. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Orte können nicht gleichzeitig Einfallspunkte und Kreuzungen sein.“ ausgegeben.
+
+\textbf{Testfall: Einfallspunktname zu lang} \\
+Datei: \texttt{ERROR\_ENTRY\_POINT\_NAME\_TOO\_LONG.txt}
+
+\begin{lstlisting}
+# Test case: Entry point name too long
+Zeitraum:
+50 1
+
+Einfallspunkte:
+ThisIsAnExcessivelyLongEntryPointNameThatExceeds... 0 0 B 2
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Der Name des Einfallspunkts überschreitet die erlaubte Maximallänge von 100 Zeichen (wurde hier abgeschnitten). \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Einfallspunktname ist zu lang: …“ ausgegeben.
+
+\clearpage
+
+\textbf{Testfall: Kreuzungsname zu lang} \\
+Datei: \texttt{ERROR\_INTERSECTION\_NAME\_TOO\_LONG.txt}
+
+\begin{lstlisting}
+# Test case: Intersection name too long
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+
+Kreuzungen:
+ThisIsAnExcessivelyLongIntersectionName... 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Der Name der Kreuzung überschreitet die erlaubte Maximallänge von 100 Zeichen (wurde hier abgeschnitten). \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Kreuzungsname ist zu lang: …“ ausgegeben.
+
+\textbf{Testfall: Ungültige Koordinatenkomponente} \\
+Datei: \texttt{ERROR\_INVALID\_COORDINATE\_COMPONENT.txt}
+
+\begin{lstlisting}
+# Test case: Invalid coordinate component
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 2000 0 B 2
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Der X-Wert der Koordinate von Einfallspunkt A liegt außerhalb des erlaubten Bereichs von \(-1000\) bis \(1000\). \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Ungültiger Wert für Koordinatenkomponente: …“ ausgegeben.
+
+\clearpage
+
+\textbf{Testfall: Ungültige Einfallspunktreferenz} \\
+Datei: \texttt{ERROR\_INVALID\_ENTRY\_POINT\_REFERENCE.txt}
+
+\begin{lstlisting}
+# Test case: Entry points reference non-existent intersections
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 Z 2
+C 0 2 Y 5
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+E 4 1 D 20 F 20 G 10 B 50
+\end{lstlisting}
+
+Beschreibung: Die Einfallspunkte A und C verweisen auf nicht existierende Kreuzungen Z bzw. Y. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Nicht alle Referenzen von Einfallspunkten existieren tatsächlich.“ ausgegeben.
+
+\textbf{Testfall: Ungültige allgemeine Taktrate} \\
+Datei: \texttt{ERROR\_INVALID\_GENERAL\_FREQUENCY.txt}
+
+\begin{lstlisting}
+# Test case: Invalid general frequency
+Zeitraum:
+50 60
+
+Einfallspunkte:
+A 0 0 B 2
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Die allgemeine Taktrate (60) ist größer als die Simulationszeitspanne (50 Sekunden), was nicht erlaubt ist. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Ungültiger Wert für allgemeine Taktarate: …“ ausgegeben.
+
+\clearpage
+
+\textbf{Testfall: Ungültige Kreuzungsreferenz} \\
+Datei: \texttt{ERROR\_INVALID\_INTERSECTION\_REFERENCE.txt}
+
+\begin{lstlisting}
+# Test case: Intersections reference non-existent locations
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+C 0 2 B 5
+
+Kreuzungen:
+B 0 1 A 20 C 30 X 50
+E 4 1 D 20 F 20 G 10 Y 50
+\end{lstlisting}
+
+Beschreibung: Die Kreuzungen verweisen auf Orte (X und Y), die nicht als Einfallspunkte oder Kreuzungen existieren. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Nicht alle Referenzen von Kreuzungen existieren tatsächlich.“ ausgegeben.
+
+\textbf{Testfall: Ungültiger Maximalzeitwert} \\
+Datei: \texttt{ERROR\_INVALID\_MAX\_TIME.txt}
+
+\begin{lstlisting}
+# Test case: Decimal value for maxTime
+Zeitraum:
+50.0 1
+
+Einfallspunkte:
+A 0 0 B 2
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Der Wert für die maximale Simulationszeitspanne ist eine Dezimalzahl, es wird jedoch eine ganze Zahl erwartet. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Ungültiger Wert für die Simulationszeitspanne: … Dezimalwerte sind nicht erlaubt.“ ausgegeben.
+
+\clearpage
+
+\textbf{Testfall: Ungültige Wahrscheinlichkeit} \\
+Datei: \texttt{ERROR\_INVALID\_PROBABILITY.txt}
+
+\begin{lstlisting}
+# Test case: Invalid probability in percentage
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+C 4 5 B 2
+E 2 3 B 2
+
+Kreuzungen:
+B 0 1 A -20 C 30 E 150
+\end{lstlisting}
+
+Beschreibung: Die relative Wahrscheinlichkeit fürs Abbiegen nach A an Kreuzung B ist negativ.
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Ungültiger Wert für Wahrscheinlichkeit: …“ ausgegeben.
+
+\textbf{Testfall: Ungültige Orts-Wahrscheinlichkeits-Paare} \\
+Datei: \texttt{ERROR\_LOCATION\_PROBABILITY\_PAIRS\_EXPECTED.txt}
+
+\begin{lstlisting}
+# Test file for ERROR_LOCATION_PROBABILITY_PAIRS_EXPECTED
+Zeitraum:
+3600 1
+
+Einfallspunkte:
+EntryPoint1 0 0 Intersection1 1
+EntryPoint2 3 3 Intersection1 1
+EntryPoint3 5 5 Intersection1 1
+EntryPoint4 4 4 Intersection1 1
+
+Kreuzungen:
+Intersection1 0 0 EntryPoint1 EntryPoint3 EntryPoint4 EntryPoint2 0.5
+\end{lstlisting}
+
+Beschreibung: In der Kreuzung fehlen Wahrscheinlichkeiten für einige Ziele — es wird erwartet, dass jede Zielangabe von einer Wahrscheinlichkeit begleitet wird. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Ungültiges Format für Kreuzung, alle Ortsangaben werden mit relativen Wahrscheinlichkeiten erwartet: …“ ausgegeben.
+
+\clearpage
+
+\textbf{Testfall: Mehrere Zeitabschnitte} \\
+Datei: \texttt{ERROR\_MULTIPLE\_TIMESPAN\_SECTIONS.txt}
+
+\begin{lstlisting}
+# Test case: Duplicate sections
+Zeitraum:
+50 1
+
+Zeitraum:
+60 2
+
+Einfallspunkte:
+A 0 0 B 2
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Die Datei enthält zwei „Zeitraum:“-Abschnitte, was laut Spezifikation nicht erlaubt ist. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Mehrere 'Zeitraum:' Abschnitte sind nicht erlaubt.“ ausgegeben.
+
+\textbf{Testfall: Keine Einfallspunkte} \\
+Datei: \texttt{ERROR\_NO\_ENTRY\_POINTS.txt}
+
+\begin{lstlisting}
+# Test case: Empty entry points
+Zeitraum:
+50 1
+
+Einfallspunkte:
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Es sind keine Einfallspunkte in der Datei definiert. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Keine Einfallspunkte gefunden.“ ausgegeben.
+
+\clearpage
+
+\textbf{Testfall: Keine Kreuzungen} \\
+Datei: \texttt{ERROR\_NO\_INTERSECTIONS.txt}
+
+\begin{lstlisting}
+# Test case: Empty intersections
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+
+Kreuzungen:
+\end{lstlisting}
+
+Beschreibung: Es sind keine Kreuzungen in der Datei definiert. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Keine Kreuzungen gefunden.“ ausgegeben.
+
+\textbf{Testfall: Zu wenig Verbindungen an Kreuzung} \\
+Datei: \texttt{ERROR\_TOO\_FEW\_CONNECTED\_STREETS.txt}
+
+\begin{lstlisting}
+# Test file for ERROR_TOO_FEW_CONNECTED_STREETS
+Zeitraum:
+3600 1
+
+Einfallspunkte:
+EntryPoint1 0 0 Intersection1 1
+EntryPoint2 1 1 Intersection1 1
+EntryPoint3 2 2 Intersection1 1
+
+Kreuzungen:
+Intersection1 0 0 EntryPoint1 2
+\end{lstlisting}
+
+Beschreibung: Die Kreuzung Intersection1 hat keine verbundenen Straßen, was unter der minimal erforderlichen Anzahl liegt. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Diese Kreuzung hat eventuell zu wenig verbindende Straßen: …“ ausgegeben.
+
+\clearpage
+
+\textbf{Testfall: Zu viele Verbindungen an Kreuzung} \\
+Datei: \texttt{ERROR\_TOO\_MANY\_CONNECTED\_STREETS.txt}
+
+\begin{lstlisting}
+# Test file for ERROR_TOO_MANY_CONNECTED_STREETS
+Zeitraum:
+3600 1
+
+Einfallspunkte:
+EntryPoint1 0 0 Intersection1 1
+EntryPoint2 1 1 Intersection1 1
+EntryPoint3 2 2 Intersection1 1
+EntryPoint4 3 3 Intersection1 1
+EntryPoint5 4 4 Intersection1 1
+EntryPoint6 5 5 Intersection1 1
+EntryPoint7 6 6 Intersection1 1
+EntryPoint8 7 7 Intersection1 1
+EntryPoint9 8 8 Intersection1 1
+EntryPoint10 9 9 Intersection1 1
+EntryPoint11 10 10 Intersection1 1
+EntryPoint12 11 11 Intersection1 1
+EntryPoint13 12 12 Intersection1 1
+EntryPoint14 13 13 Intersection1 1
+EntryPoint15 14 14 Intersection1 1
+EntryPoint16 15 15 Intersection1 1
+EntryPoint17 16 16 Intersection1 1
+EntryPoint18 17 17 Intersection1 1
+EntryPoint19 18 18 Intersection1 1
+EntryPoint20 19 19 Intersection1 1
+EntryPoint21 20 20 Intersection1 1
+EntryPoint22 21 21 Intersection1 1
+
+Kreuzungen:
+Intersection1 1 0 EntryPoint1 0.5 EntryPoint2 0.5 EntryPoint3 0.5 EntryPoint4 0.5 EntryPoint5 0.5 EntryPoint6 0.5 EntryPoint7 0.5 EntryPoint8 0.5 EntryPoint9 0.5 EntryPoint10 0.5 EntryPoint11 0.5 EntryPoint12 0.5 EntryPoint13 0.5 EntryPoint14 0.5 EntryPoint15 0.5 EntryPoint16 0.5 EntryPoint17 0.5 EntryPoint18 0.5 EntryPoint19 0.5 EntryPoint20 0.5 EntryPoint21 0.5
+\end{lstlisting}
+
+Beschreibung: Die Kreuzung Intersection1 hat mehr als die erlaubten 20 verbundenen Straßen. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Diese Kreuzung hat eventuell mehr als 20 verbindende Straßen: …“ ausgegeben.
+
+\clearpage
+\textbf{Testfall: Nicht UTF-8 kodierte Datei} \\
+Datei: \texttt{ERROR\_NOT\_UTF8.txt}
+
+\begin{figure}[h!]
+    \centering
+    \makebox[\textwidth][c]{\includegraphics[width=0.5\textwidth]{../badInputTests/ERROR_NOT_UTF8.jpeg}}
+\end{figure}
+
+Beschreibung: Diese Datei ist nicht im UTF-8-Format kodiert. \\
+Erwartete Fehlermeldung: „Eingabedatei ist nicht UTF-8 kodiert: “;
+\clearpage
+\section{Grenzfälle}
+
+\textbf{Testfall: Mindestabstand der Koordinaten wird eingehalten}
+
+Datei: \texttt{coordinatesHaveMinimumDistance.txt}
+\begin{lstlisting}
+Zeitraum:
+50 1
+
+Einfallspunkte:
+A 0 0 B 2
+C 0.1 0.0 B 5
+E 4.3 0.0 B 5
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50
+\end{lstlisting}
+
+Beschreibung: Der Mindestabstand von 0{,}1 Einheiten wird zwischen A und C eingehalten.
+
+\textbf{Testfall: Beliebige Reihenfolge der Abschnitte}
+
+Datei: \texttt{differentSectionOrder.txt}
+\begin{lstlisting}
+Zeitraum:
+50 3
+
+Kreuzungen:
+B 0 1 A 20 C 30
+
+Einfallspunkte:
+A 0 0 B 2
+C 1 0.0 B 5
+\end{lstlisting}
+
+Beschreibung: Die Reihenfolge der Abschnitte entspricht nicht der Reihenfolge aus den Beispielen von Zeitraum, Einfallspunkte und Kreuzungen.
+
+\textbf{Testfall: Maximale erlaubte Simulationszeit}
+
+Datei: \texttt{maximalTime.txt}
+\begin{lstlisting}
+Zeitraum:
+86400 1
+Einfallspunkte:
+A 2 0 C 2
+B 2 4 C 5
+F 5 4 C 5
+
+Kreuzungen:
+C 0 1 A 20 B 30 F 50
+\end{lstlisting}
+
+Beschreibung: Die maximale Simulationsdauer von 24 Stunden (86400 Sekunden) wird akzeptiert.
+\clearpage
+
+\textbf{Testfall: Maximale erlaubte Koordinatenwerte}
+
+Datei: \texttt{maximumCoords.txt}
+\begin{lstlisting}
+Zeitraum:
+86 1
+Einfallspunkte:
+A 2 0 C 2
+B 1000 4 C 5
+F 5 4 C 5
+
+Kreuzungen:
+C 0 1 A 0.1 B 30 F 50
+\end{lstlisting}
+
+Beschreibung: Der Wert 1000 für eine Koordinatenkomponente wird korrekt akzeptiert.
+
+
+\textbf{Testfall: Maximale Namenslänge wird akzeptiert}
+
+Datei: \texttt{maximumInputName.txt}
+\begin{lstlisting}
+Zeitraum:
+86 1
+Einfallspunkte:
+A 2 0 C 2
+B 1000 4 C 5
+iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii... 5 4 C 5
+
+Kreuzungen:
+C 0 1 A 0.1 B 30 iiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.... 50
+\end{lstlisting}
+
+Beschreibung: Ein Einfallspunkt- und Kreuzungsname mit genau 100 Zeichen (hier abgeschnitten dargestellt) wird akzeptiert.
+
+\clearpage
+\textbf{Testfall: Maximale Anzahl verbundener Straßen}
+
+Datei: \texttt{maximumNumEdges.txt}
+\begin{lstlisting}
+Zeitraum:
+360 1
+
+Einfallspunkte:
+EntryPoint1 0 0 Intersection1 1
+EntryPoint2 1 1 Intersection1 1
+EntryPoint3 2 2 Intersection1 1
+EntryPoint4 3 3 Intersection1 1
+EntryPoint5 4 4 Intersection1 1
+EntryPoint6 5 5 Intersection1 1
+EntryPoint7 6 6 Intersection1 1
+EntryPoint8 7 7 Intersection1 1
+EntryPoint9 8 8 Intersection1 1
+EntryPoint10 9 9 Intersection1 1
+EntryPoint11 10 10 Intersection1 1
+EntryPoint12 11 11 Intersection1 1
+EntryPoint13 12 12 Intersection1 1
+EntryPoint14 13 13 Intersection1 1
+EntryPoint15 14 14 Intersection1 1
+EntryPoint16 15 15 Intersection1 1
+EntryPoint17 16 16 Intersection1 1
+EntryPoint18 17 17 Intersection1 1
+EntryPoint19 18 18 Intersection1 1
+EntryPoint20 19 19 Intersection1 1
+
+Kreuzungen:
+Intersection1 1 0 EntryPoint1 0.5 EntryPoint2 0.5 EntryPoint3 0.5 EntryPoint4 0.5 EntryPoint5 0.5 EntryPoint6 0.5 EntryPoint7 0.5 EntryPoint8 0.5 EntryPoint9 0.5 EntryPoint10 0.5 EntryPoint11 0.5 EntryPoint12 0.5 EntryPoint13 0.5 EntryPoint14 0.5 EntryPoint15 0.5 EntryPoint16 0.5 EntryPoint17 0.5 EntryPoint18 0.5 EntryPoint19 0.5 EntryPoint20 0.5
+\end{lstlisting}
+
+Beschreibung: Eine Kreuzung mit 20 verbundenen Straßen wird erfolgreich verarbeitet.
+
+\textbf{Testfall: Minimal gültiges Beispiel}
+
+Datei: \texttt{minimalExample.txt}
+\begin{lstlisting}
+Zeitraum:
+50 1
+Einfallspunkte:
+A 2 0 C 2
+B 2 4 C 5
+
+Kreuzungen:
+C 0 1 A 20 B 30
+\end{lstlisting}
+
+Beschreibung: Das minimale gültige Setup mit zwei Einfallspunkten und einer Kreuzung funktioniert korrekt.
+\clearpage
+\textbf{Testfall: Wahrscheinlichkeit nahe Null}
+
+Datei: \texttt{probabilityAlmostZero.txt}
+\begin{lstlisting}
+Zeitraum:
+86 1
+Einfallspunkte:
+A 2 0 C 2
+B 2 4 C 5
+F 5 4 C 5
+
+Kreuzungen:
+C 0 1 A 0.000001 B 30 F 50
+\end{lstlisting}
+
+Beschreibung: Wahrscheinlichkeiten im gültigen unteren Grenzbereich (nahe 0.000001) werden korrekt akzeptiert.
+
+\textbf{Testfall: Takt gleich Zeitspanne}
+
+Datei: \texttt{timeSpanIsClockRate.txt}
+\begin{lstlisting}
+Zeitraum:
+50 50
+
+Einfallspunkte:
+A 0 0 B 2
+C 1 0.0 B 5
+
+Kreuzungen:
+B 0 1 A 20 C 30
+\end{lstlisting}
+
+Beschreibung: Der Takt ist gleich der maximalen Zeitspanne – dies ist gültig und wird korrekt akzeptiert.
+
+\textbf{Nicht .txt Dateien}
+
+Dateien, welche nicht auf „.txt“ enden, werden auch verarbeitet, wenn diese valide in UTF-8 kodierte Simulationsstadtpläne enthalten.
 
 \section{Ausführen der Tests}
 
@@ -22,7 +603,7 @@ Der Quellcode ist die gleichnamige Java-Datei im \texttt{tests}-Ordner, ebenfall
 Das Programm führt die folgenden Schritte aus:
 
 \begin{itemize}
-    \item \textbf{Verzeichnisprüfung:} Es wird geprüft, ob das Verzeichnis \texttt{badInputTests} existiert und Eingabedateien enthält.
+    \item \textbf{Verzeichnisprüfung:} Es wird geprüft, ob das Fehlerfallverzeichnis existiert und Eingabedateien enthält.
     \item \textbf{Definition der Testfälle:} Für jede fehlerhafte Eingabedatei wird die erwartete Fehlermeldung definiert. Beispiele für Fehler sind:
     \begin{itemize}
         \item Fehlende Einfallspunkte (\texttt{ERROR\_NO\_ENTRY\_POINTS}),
@@ -33,8 +614,15 @@ Das Programm führt die folgenden Schritte aus:
     \item \textbf{Endergebnis:} Am Ende wird eine Übersicht ausgegeben, ob alle Tests bestanden wurden oder ob Fehler aufgetreten sind.
 \end{itemize}
 
+Der \texttt{BadInputTestRunner} kann wie normale jars mit:
+    \begin{lstlisting}[language=bash]
+java -jar BadInputTestRunner.jar <Pfad/zum/Fehlerfallordner>
+    \end{lstlisting}
+ausgeführt werden.
+Wird kein Startparameter angegeben, wird nach dem relativen Pfad 'badInputTests' gesucht.
 
-Zum Testen des Programms steht je ein Skript für Windows und Linux/macOS zur Verfügung. Unter Windows wird das Skript \texttt{test\_run.bat} verwendet.
+
+Zum Testen des trafficsimulation-Programms steht je ein Skript für Windows und Linux/macOS zur Verfügung. Unter Windows wird das Skript \texttt{test\_run.bat} verwendet.
 Es führt die Datei \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} einzeln aus und übergibt sie als Argument an das Programm.
 
 Zur Ausführung müssen alle Eingabedateien im Verzeichnis \texttt{input\_files} liegen und sich die \texttt{.jar}-Datei im gleichen Ordner wie das Skript befinden.

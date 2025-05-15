@@ -1,4 +1,4 @@
-# Not unique entrypoints and intersections and probabilities do not sum to 100
+# Not unique entrypoints and intersections
 Zeitraum:
 50 1
 

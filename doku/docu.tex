@@ -84,14 +84,55 @@ Unterschrift
 
 \include{procedureDescription}
 
+\include{mondayDeviations}
+
 \include{tests}
 
 \include{extensibility}
-\chapter{Zusammenfassung und Ausblick}
 
-\appendix
-\chapter{Abweichungen und Ergänzungen zum Vorentwurf}
-<Inhalt einfügen>
+
+\chapter{Projektstruktur}
+
+Das Projekt ist wie folgt strukturiert:
+
+\begin{verbatim}
+.gitignore
+groPro2025.iml
+info.txt
+testScript.bat
+testScript.sh
+todos.txt
+trafficSimulation.jar
+.idea/
+6511-225_Download-Vorlagen/
+    Plot_howto.txt
+    Plot.py
+    IHK_01/
+    IHK_02/
+    IHK_03/
+    ...
+badInputTests/
+doku/
+edgeCases/
+META-INF/
+normalCases/
+badInputTests/
+src/
+out/
+BadInputTestRunner.jar
+\end{verbatim}
+
+Die wichtigsten Verzeichnisse und Dateien sind:
+\begin{itemize}
+    \item \texttt{doku/}: Enthält die Dokumentation, einschließlich der LaTeX-Dateien wie \texttt{docu.tex}, \texttt{intro.tex}, und \texttt{tests.tex}. Die gebaute PDF befindet sich im build Verzeichnis
+    \item \texttt{src/}: Der Quellcode des Projekts. Die Javadateien befinden sich im trafficsimulation package.
+    \item \texttt{normalCases/}, \texttt{edgeCases/} und \texttt{badInputTests/}: Testfälle für Normal, Grenz und Fehlerfälle.
+    \item \texttt{trafficSimulation.jar}: Die ausführbare JAR-Datei der Simulation.
+    \item \texttt{6511-225\_Download-Vorlagen/}: Die IHK Vorlagen und das Skript \texttt{Plot.py}.
+    \item \texttt{out/}: enthält die von IntelliJ automatisch gebaute .jar
+    \item \texttt{testScript.bat} \texttt{testScript.sh}: Die Testskripte zum automatischen Testen von Verzeichnissen
+    \item \texttt{BadInputTestRunner.jar}: Testjava Hilfstool zum automatischen Testen von Fehlerfällen
+\end{itemize}
 
 \chapter{Benutzeranleitung}
 
@@ -103,7 +144,7 @@ Um das Java-Programm auszuführen, gehen Sie wie folgt vor:
     \item Navigieren Sie in das Verzeichnis, in dem sich die JAR-Datei befindet.
     \item Führen Sie das Programm mit folgendem Befehl aus und geben Sie dabei den gewünschten Eingabepfad als Parameter an:
     \begin{lstlisting}[language=bash]
-    java -jar MeinProgramm.jar <Pfad/zur/Eingabedatei>
+    java -jar trafficSimulation.jar <Pfad/zur/Eingabedatei>
     \end{lstlisting}
     \item Ersetzen Sie \texttt{<Pfad/zur/Eingabedatei>} durch den tatsächlichen Pfad zu Ihrer Eingabedatei.
 \end{enumerate}
@@ -111,7 +152,7 @@ Um das Java-Programm auszuführen, gehen Sie wie folgt vor:
 Beispiel:
 
 
-\texttt{java -jar MeinProgramm.jar C:\textbackslash Users\textbackslash debel\textbackslash input.txt}
+\texttt{java -jar trafficsimulationjar C:\textbackslash Users\textbackslash debel\textbackslash input.txt}
 
 
 
@@ -132,7 +173,9 @@ Prozessor: 11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz   1.80 GHz
 
 Betriebssystem: Windows 11 Enterprise
 
-\chapter{Quellcode}
-\lstinputlisting[language=Java]{../src/trafficsimulation/Main.java}
+\chapter{Zusammenfassung und Ausblick}
+
+% \chapter{Quellcode}
+% \lstinputlisting[language=Java]{../src/trafficsimulation/Main.java}
 
 \end{document}

@@ -184,10 +184,22 @@ die für jeden Zeitschritt folgende Operationen durchführt:
 Bewegung der Fahrzeuge: Die Methode updateVehicles() iteriert über alle aktiven Fahrzeuge und aktualisiert deren Position.
 Wenn ein Fahrzeug sein Ziel erreicht hat,
 wird es entweder entfernt (bei Ankunft an einem Einfallspunkt) oder ihm wird anhand der Wahrscheinlichkeiten an der aktuellen Kreuzung ein neues Ziel zugewiesen.
-Dabei wird die Bewegung unter Beibehaltung der Restgeschwindigkeit auf die neue Verbindung fortgesetzt.
+An jeder Kreuzung werden die relativen Wahrscheinlichkeiten neu berechnet, da Fahrzeuge nicht in die Richtung zurückfahren dürfen, aus der sie gekommen sind.
+Die Neuberechnung der Wahrscheinlichkeiten erfolgt durch Normalisierung. Dabei wird die Wahrscheinlichkeit für ein Wenden ignoriert,
+und alle verbleibenden Wahrscheinlichkeiten werden durch die Summe der übrigen Wahrscheinlichkeiten (alle außer die Wendewahrscheinlichkeit) geteilt.
+
+Zur Auswahl der Straße, auf die mit proportionaler Wahrscheinlichkeit abgebogen werden soll, wird der „Roulette-Wheel-Selection“-Algorithmus verwendet. 
+Dabei wird zunächst eine gleichverteilte Zufallszahl zwischen 0 und 1 generiert. Anschließend wird überprüft, ob der Wert der ersten Wahrscheinlichkeit größer oder gleich der erzeugten Zufallszahl ist. 
+Falls dies nicht der Fall ist, wird die nächste Wahrscheinlichkeit aufaddiert und der Vergleich wiederholt, bis die kumulierte Wahrscheinlichkeit größer oder gleich der Zufallszahl ist. 
+Der Index der zuletzt hinzugefügten Wahrscheinlichkeit entspricht der mit proportionaler Wahrscheinlichkeit ausgewählten Straße.
+
+Die Bewegung wird unter Beibehaltung der Restgeschwindigkeit auf die neue Verbindung fortgesetzt.
 
 Fahrzeugerzeugung: Zu festgelegten Zeitintervallen (abhängig vom Taktwert des jeweiligen Einfallspunkts) wird ein neues Fahrzeug erzeugt.
-Die Methode createNewVehicle() initialisiert dessen Position, Ziel, Bewegungsrichtung und zufällige Geschwindigkeit.
+Die Methode createNewVehicle() initialisiert dessen Position, Ziel, Bewegungsrichtung und Geschwindigkeit.
+Die Geschwindigkeit wird normalverteilt mit einem Erwartungswert von 45 km/h und einer Standardabweichung von 10 km/h erzeugt.
+Hierzu wird eine standardnormalverteilte Zufallsvariable (\(N(0,1)\)) generiert, mit der Standardabweichung multipliziert und anschließend zum Erwartungswert addiert.
+Die Geschwindigkeit wird zuvor in die Einheit von 100 Metern umgerechnet.
 Außerdem wird die zugehörige Kante im Verkehrsnetz bei Fahrzeugeintritt aktualisiert.
 
 Statistikerhebung: Nach jedem Zeitschritt wird für jede Kante im Netz die aktuelle Anzahl an Fahrzeugen geprüft und ggf. ein neuer Maximalwert gespeichert (updateDirectedEdgesMaxima()).
@@ -219,7 +231,7 @@ Das folgende Klassen-Diagramm zeigt die Struktur der City-Klasse und die nachfol
     \makebox[\textwidth][c]{\includegraphics[width=1.3\textwidth]{nassis/City/updateMaximaAndHistory.pdf}}
 \end{figure}
 
-
+\FloatBarrier
 Darüber hinaus stellt die Klasse Funktionen zur Verfügung,
 um alle gerichteten Kanten alphabetisch sortiert auszulesen (getAlphabeticallySortedDirectedEdges()),
 was für die strukturierte Ausgabe der Ergebnisse genutzt wird.
@@ -229,6 +241,7 @@ was für die strukturierte Ausgabe der Ergebnisse genutzt wird.
 \section{Ausgabe}
 
 Nach Abschluss der Simulation werden die Ergebnisse in drei getrennte Ausgabedateien geschrieben.
+Die hierfür verantwortlichen Klassen befinden sich im Output Verzeichnis des trafficsimulation packages.
 
 \begin{itemize}
   \item \textbf{\texttt{Plan.txt} (Klasse \texttt{PlanWriter})} \\

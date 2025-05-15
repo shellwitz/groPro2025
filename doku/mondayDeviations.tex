@@ -1,0 +1,32 @@
+\chapter{Abweichungen vom ersten Entwurf}
+Bei der Implementierung wurden einige Abweichungen vom ersten Entwurf vom Montag, den 12.05.2025, vorgenommen.
+So wurde eine \texttt{CityDTO}-Datentransferklasse geschrieben, die verwendet wird, um ein \texttt{City}-Objekt zu instanziieren.
+Dies ist angenehmer als die Nutzung eines Konstruktors mit fünf Eingabeparametern und erfordert keine Implementierung von
+fünf \texttt{get}-Methoden in der \texttt{TextFileReader}-Klasse.
+
+Die Klasse \texttt{TrafficNode}, die eine Kreuzung darstellen sollte, erhielt den passenderen Namen \texttt{Intersection}.
+Es wurde eine Helper-Klasse mit einer statischen \texttt{getId()}-Methode implementiert, um die Fahrzeug-IDs zu generieren.
+
+Im UML-Klassendiagramm der \texttt{Vehicle}-Klasse wurde das Attribut \texttt{double velocity} (für Geschwindigkeit) vergessen (existiert in der finalen Implementierung).
+Anfangs wurde nicht spezifiziert, dass die Ausgabe in den Dateien \texttt{Plan.txt} und \texttt{Statistik.txt} nach alphabetisch sortierten Eingabeortsnamen erfolgen soll.
+Deswegen wurde die Methode \texttt{getAlphabeticallySortedDirectedEdges()} geschrieben.
+
+Die Methode \texttt{updateVehicle()} erhält einen \texttt{Iterator<Vehicle>} anstelle eines einzelnen \texttt{Vehicle}-Objekts, um ein sicheres Entfernen zu gewährleisten,
+z. B. wenn ein Fahrzeug den Stadtplan über einen Einfallspunkt verlässt, während die Fahrzeugliste iteriert wird.
+
+Die Methode \texttt{considerVehiclesThatAreStillDriving()}, die ursprünglich dazu gedacht war, Fahrzeuge,
+die nach Ende der Simulationszeit noch unterwegs sind, in die Statistik aufzunehmen,
+erwies sich als unnötig, da die Statistikberechnung Fahrzeuge bereits als den Abschnitt gefahren zählt,
+sobald sie auf den jeweiligen Abschnitt auffahren.
+
+Eine Reihe von \texttt{get}-Methoden wurde hinzugefügt, um den Outputwritern \\
+(z. B. \texttt{PlanWriter}) die benötigten Informationen wie die \texttt{directedEdges} bereitzustellen.
+
+Einige Anforderungen vom Montag wurden revidiert. So wurde ursprünglich festgelegt, dass jede Kreuzung mindestens drei Abbiegepunkte haben soll.
+Da dies die Eingabe des „IHK-Beispiels Tunneldorf mit Umfahrung über I“ ungültig machen würde, wurde davon abgewichen,
+sodass jede Kreuzung nun nur mindestens zwei verbindende Straßen haben muss.
+In der Anfangsspezifikation wurde fälschlicherweise angenommen, dass die relativen Wahrscheinlichkeiten einer Kreuzung in
+Prozent angegeben sind und sich zu 100 aufaddieren. Dies wurde geändert, sodass alle relativen Wahrscheinlichkeiten intern normiert werden.
+
+
+

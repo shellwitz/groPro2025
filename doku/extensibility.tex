@@ -1,5 +1,4 @@
 \chapter{Erweiterbarkeit}
-
 Eine vorstellbare weitere Anforderung wäre, 
 dass Fahrzeuge nicht überholen können, sondern einen Mindestabstand zum vorausfahrenden Fahrzeug einhalten müssen.
 Diese zusätzliche Anforderung ließe sich durch Anpassen der DirectedEdgeInfo Klasse und der updateVehicle Methode erreichen.
@@ -14,37 +13,37 @@ wenn es den Minimalabstand unterschreiten würde die Position auf die übergeben
 Am Ende aller Iterationen aller DirectedEdges, werden die Positionen der Fahrzeuge neu berechnet, welche Straßen an Kreuzungen gewechselt haben.
 
 Wenn der Verkehrsfluss an Kreuzungen über Ampeln geregelt werden würde, würde die Position von Fahrzeugen,
-die eine Straße an einer Kreuzung wechseln würde um die Anzahl an Takten, wie lange die Ampel gehen würde gestoppt, bevor diese weiterfahren dürfen.
+die eine Straße an einer Kreuzung wechseln würde, um die Anzahl an Takten, wie lange die Ampel grün bleibt, gestoppt, bevor diese weiterfahren dürfen.
 
-Beim Hinzufügen von Kreisverkehren wäre eine ähnliche Logik anwendbar. Ein Fahrzeug würde für die Taktlänge eines im Stadtplan durch ein extra Zeichen angegebenen Kreisverkehr
-an der Kreuzung verweilen, bevor diese weiterfährt.
+Beim Hinzufügen von Kreisverkehren wäre eine ähnliche Logik anwendbar. Ein Fahrzeug würde für die Taktlänge eines im Stadtplan durch ein extra Zeichen angegebenen Kreisverkehrs
+an der Kreuzung verweilen, bevor es weiterfährt.
 
-Für das Implementieren einer Rechts vor Links Überprüfung müsste man für jedes Fahrzeug, welches eine Kreuzung passieren würde erstmal prüfen,
-welche Straßen rechts sind. Dafür würde man die xy Komponenten des Anfangs End Vektors der gerade gefahrenen Straße tauschen und danach die y Komponente negieren,
-um den links orthogonalen Vektor zu dem gerade gefahrenen Straßenvektor zu erhalten. Nun findet man alle directedEdges bei denen to der Kreuzung entspricht an der abgebogen werden soll.
-Von diesen sind die Straßen rechts, bei denen das Skalarprodukt des links orthogonalen Vektor mit dem Anfangs End Vektor der potentiellen rechts Straße größer 0 ist.
+Für das Implementieren einer Rechts-vor-Links-Überprüfung müsste man für jedes Fahrzeug, das eine Kreuzung passieren würde, zunächst prüfen,
+welche Straßen rechts liegen. Dafür würde man die xy-Komponenten des Anfangs-End-Vektors der gerade gefahrenen Straße tauschen und danach die x-Komponente negieren,
+um den links-orthogonalen Vektor zu dem gerade gefahrenen Straßenvektor zu erhalten. Nun findet man alle directedEdges, bei denen „to“ der Kreuzung entspricht, an der abgebogen werden soll.
+Von diesen sind die Straßen rechts, bei denen das Skalarprodukt des links-orthogonalen Vektors mit dem Anfangs-End-Vektor der potenziellen rechten Straße größer als 0 ist.
 
-Jetzt müsste berechnet werden, ob mehrere Autos in einem vorher festgelegten Zeitraum an wie oben beschriebenen Straßen an einer Kreuzung stehen.
-Für eine richtige Implementation müsste vorher geklärt werden, wie groß der Zeitraum ist, den Autos bei Rechts vor Links auf andere Autos warten müssten
-und wie weit entfernt Fahrzeuge maximal von einem an einer Kreuzung wartendem Fahrzeug sein könne, damit die Rechts vor Links Regelung gilt. 
-Für Stadtpläne mit niedrigen Einfallspunkttaktraten könnte es jedoch zu deadlocks führen, wenn an einer Kreuzung jedes Auto auf das Auto rechts warten muss.
+Jetzt müsste berechnet werden, ob mehrere Autos in einem vorher festgelegten Zeitraum an den oben beschriebenen Straßen an einer Kreuzung stehen.
+Für eine korrekte Implementierung müsste vorher geklärt werden, wie groß der Zeitraum ist, den Autos bei Rechts-vor-Links auf andere Autos warten müssten,
+und wie weit entfernt Fahrzeuge maximal von einem an einer Kreuzung wartenden Fahrzeug sein können, damit die Rechts-vor-Links-Regelung gilt. 
+Für Stadtpläne mit niedrigen Einfallspunkttaktraten könnte es jedoch zu Deadlocks führen, wenn an einer Kreuzung jedes Auto auf das Auto rechts warten muss.
 
 Mehrere Fahrbahnen pro Strecke erfordern eine Lockerung des Einleseformats,
-so müssen doppelte Einfallspunktzeilen, wo sich lediglich die Taktrate unterscheidet zugelassen werden.
-Zudem müssen auch in Kreuzungszeilen mehrfach die gleichen Abbiegenamen mit anderen Wahrscheinlichkeiten zugelassen werden.
+so müssen doppelte Einfallspunktzeilen, bei denen sich lediglich die Taktrate unterscheidet, zugelassen werden.
+Zudem müssen auch in Kreuzungszeilen mehrfach die gleichen Abbiegenamen mit unterschiedlichen Wahrscheinlichkeiten zugelassen werden.
 
-Ein Problem bei der jetzigen Implementierung ist die Verwendung von HashMaps. Diese erlauben nicht mehrfach gleiche Schlüssel.
+Ein Problem bei der jetzigen Implementierung ist die Verwendung von HashMaps. Diese erlauben keine mehrfach gleichen Schlüssel.
 Ein Trick könnte die Durchnummerierung der Punkte vor dem Anwenden der Hashfunktion sein, sodass ein Einfallspunkt mit zwei
-Fahrbahnen z.B. als zwei Punkte mit den gleichen Koordinaten B1 und B2 gehand habt werden.
-Hierbei ist natürlich zu überprüfen, dass nicht schon ein Punkt B2 existiert. Eine sauberere Lösung wäre eine Ort Klasse mit einer ID und einem String als Namen und die Verwendung einer solchen
-Klasse in Hashmaps (natürlich müsste vorher Vergleichen und die Hashfunktion überschrieben werden).
+Fahrbahnen z. B. als zwei Punkte mit den gleichen Koordinaten B1 und B2 gehandhabt wird.
+Hierbei ist natürlich zu überprüfen, dass nicht schon ein Punkt B2 existiert. Eine sauberere Lösung wäre eine Ort-Klasse mit einer ID und einem String als Namen und die Verwendung einer solchen
+Klasse in HashMaps (natürlich müsste vorher Vergleichen und die Hashfunktion überschrieben werden).
 
-Nicht konstante Geschwindigkeiten, welche abhängig von Streckenabschnitten sind könnten Erfordern eine Modifikation der dafür zuständigen DirectedEdgeInfos.
-In solch einem Fall würde jede DirectedEdgeInfo einen Geschwindigkeitsparameter haben oder eine Funktion, welche die Geschwindigkeit von sich auf dem jeweiligem
+Nicht konstante Geschwindigkeiten, die abhängig von Streckenabschnitten sind, könnten eine Modifikation der dafür zuständigen DirectedEdgeInfos erfordern.
+In solch einem Fall würde jede DirectedEdgeInfo einen Geschwindigkeitsparameter haben oder eine Funktion, die die Geschwindigkeit von sich auf dem jeweiligen
 Straßenabschnitt befindenden Fahrzeugen ändern kann.
 Für eine Implementierung ist der genaue Geschwindigkeitsänderungsmechanismus erforderlich.
 
-Für die oben beschriebenen potentiellen Folgeanforderungen kann zudem die Benutzung von Polymorphismus hilfreich sein.
-So kann beispielsweise DirectedEdgeInfo oder Vehicle eine Basisklasse sein von der für andere Simulationsmodi erbende Klassen benutzt werden.
+Für die oben beschriebenen potenziellen Folgeanforderungen kann zudem die Benutzung von Polymorphismus hilfreich sein.
+So kann beispielsweise DirectedEdgeInfo oder Vehicle eine Basisklasse sein, von der für andere Simulationsmodi erbende Klassen benutzt werden.
 
 

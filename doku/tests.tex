@@ -7,9 +7,9 @@ nur visuell über das PLot.py Skript.
 Die Normalfälle von der IHK Website getestet und visuell als passend empfunden.
 Ein Fokus wurde auf das Testen von Fehler und Grenzfällen bei der Einlese gelegt.
 
-Hierfür wurde ein Ordner namens badInputTests erstellt
-
 \section{Fehlerfälle}
+Die Fehlerfälle befinden sich im Ordner \texttt{badInputTests}.
+
 \textbf{Testfall: Koordinaten zu nah beieinander} \\
 Datei: \texttt{ERROR\_COORDINATES\_TOO\_CLOSE.txt}
 
@@ -409,8 +409,32 @@ Datei: \texttt{ERROR\_NOT\_UTF8.txt}
 
 Beschreibung: Diese Datei ist nicht im UTF-8-Format kodiert. \\
 Erwartete Fehlermeldung: „Eingabedatei ist nicht UTF-8 kodiert: “;
+
+\textbf{Testfall: Doppelter Abbiegepunktname} \\
+Datei: \texttt{ERROR\_DUPLICATE\_TURNOFF\_NAME.txt}
+\begin{lstlisting}
+#In the intersections there is A twice in one line
+Zeitraum:
+100 1
+
+Einfallspunkte:
+A 0 0 B 2
+C 0 2 B 5
+D 4 0 E 3
+F 4 2 E 2
+G 5 1 E 3
+
+Kreuzungen:
+B 0 1 A 20 C 30 E 50 A 40
+E 4 1 D 20 F 20 G 10 B 50
+\end{lstlisting}
+
+Beschreibung: Die Kreuzung B hat den Abbiegepunkt A zweimal. \\
+Erwartete Fehlermeldung: Es wird eine Fehlermeldung mit dem Text „Doppelter Abbiegepunktname: …“ ausgegeben.
+
 \clearpage
 \section{Grenzfälle}
+Die Grenzfalleingabedateien sind im Ordner \texttt{edgeCases}.
 
 \textbf{Testfall: Mindestabstand der Koordinaten wird eingehalten}
 
@@ -535,7 +559,7 @@ Intersection1 1 0 EntryPoint1 0.5 EntryPoint2 0.5 EntryPoint3 0.5 EntryPoint4 0.
 \end{lstlisting}
 
 Beschreibung: Eine Kreuzung mit 20 verbundenen Straßen wird erfolgreich verarbeitet.
-
+\clearpage
 \textbf{Testfall: Minimal gültiges Beispiel}
 
 Datei: \texttt{minimalExample.txt}
@@ -551,7 +575,7 @@ C 0 1 A 20 B 30
 \end{lstlisting}
 
 Beschreibung: Das minimale gültige Setup mit zwei Einfallspunkten und einer Kreuzung funktioniert korrekt.
-\clearpage
+
 \textbf{Testfall: Wahrscheinlichkeit nahe Null}
 
 Datei: \texttt{probabilityAlmostZero.txt}
@@ -590,6 +614,10 @@ Beschreibung: Der Takt ist gleich der maximalen Zeitspanne – dies ist gültig 
 
 Dateien, welche nicht auf „.txt“ enden, werden auch verarbeitet, wenn diese valide in UTF-8 kodierte Simulationsstadtpläne enthalten.
 
+\section{Normalfälle}
+Die Normalfälle wurden mit den Beispielen von der IHK-Website getestet.
+Die Dateien sind im Ordner \texttt{normalCases} gespeichert.
+
 \section{Ausführen der Tests}
 
 \subsection{BadInputTestRunner}
@@ -623,12 +651,36 @@ Wird kein Startparameter angegeben, wird nach dem relativen Pfad 'badInputTests'
 
 
 Zum Testen des trafficsimulation-Programms steht je ein Skript für Windows und Linux/macOS zur Verfügung. Unter Windows wird das Skript \texttt{test\_run.bat} verwendet.
-Es führt die Datei \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} einzeln aus und übergibt sie als Argument an das Programm.
+Die Skripte führen standardmäßig die Datei \texttt{trafficsimulation.jar} für jede Datei im Ordner \texttt{edgeCases} einzeln aus und übergeben die Datei als Argument an das Programm.
 
-Zur Ausführung müssen alle Eingabedateien im Verzeichnis \texttt{input\_files} liegen und sich die \texttt{.jar}-Datei im gleichen Ordner wie das Skript befinden.
-Das Skript kann entweder per Doppelklick oder über die Eingabeaufforderung mit \texttt{test\_run.bat} gestartet werden.
+Um andere Verzeichnisse mit Eingabedateien zu testen, können die Skripte angepasst werden in dem die Variable \texttt{INPUT\_DIR},
+welche den Pfad des Testverzeichnisses speichert, geändert wird.
 
-Für Linux oder macOS wird das Bash-Skript \texttt{test\_run.sh} genutzt. Auch hier wird die \texttt{MyProgram.jar} für jede Datei im Ordner \texttt{input\_files} aufgerufen.
+Das Skript kann entweder per Doppelklick oder über die Eingabeaufforderung mit \texttt{testScript.bat} gestartet werden.
 
-Vor dem ersten Ausführen muss dem Skript Ausführungsrecht gegeben werden, z.\,B.\ durch den Befehl \texttt{chmod +x test\_run.sh}. Danach kann es mit \texttt{./test\_run.sh} ausgeführt werden.
-Alternativ kann das Skript auch ohne Ausführungsrecht mit \texttt{bash test\_run.sh} gestartet werden.
+Für Linux oder macOS wird das Bash-Skript \texttt{testScript.sh} genutzt. Auch hier wird standardmäßig die \texttt{trafficsimulation.jar} für jede Datei im Ordner \texttt{edgeCases} aufgerufen.
+
+Vor dem ersten Ausführen muss dem Skript Ausführungsrecht gegeben werden, z.\,B.\ durch den Befehl \texttt{chmod +x testScript.sh}. Danach kann es mit \texttt{./testScript.sh} ausgeführt werden.
+Alternativ kann das Skript auch ohne Ausführungsrecht mit \texttt{bash testScript.sh} gestartet werden.
+
+Im folgenden die IHK Dokumentation zum Plot.py Skript aus der Plot\_howto.txt:
+
+\begin{quote}
+Das Skript „Plot.py“ dient dazu, die Verkehrssimulation zu visualisieren. 
+
+Der Aufruf von „Plot.py“ erfordert genau einen Parameter: den absoluten Pfad des Verzeichnisses,
+in dem alle Dateien des Testfalls liegen.
+Jeder Testfall sollte in einem eigenen Verzeichnis liegen.
+Darin liegt ein Unterverzeichnis „plots“, in dem die PNG-Plots gespeichert werden. Existiert „plots“ nicht, wird es angelegt.
+
+Die Visualisierung zeigt alle Zeitschritte mit Überschrift an.
+Am Ende die Simulation beginnt sie automatisch von vorne. Der erste Durchgang ist langsamer, weil die PNG-Bilder erzeugt werden. 
+
+Im Skript gibt es folgende zwei Parameter, mit der die Visualisierung den eigenen Wünschen angepasst werden kann:
+1. „REL\_LANE\_OFFSET“ legt fest, wie weit die Fahrbahnen neben der Fahrbahnmitte liegen.
+Die Angabe erfolgt relativ bezogen auf das Minimum der Breite und Höhe des Bildausschnitts. 
+2. „PLOT\_INTERVALL“ legt die Wartezeit zwischen den Zeitschritten beim Plot und damit die Geschwindigkeit der Visualisierung fest.
+
+„Plot.py“ wurde in der Python-Version 3.10 mit dem Package „matplotlib“ in der Version 3.8.4 und dem package „numpy“ in der Version 1.26.4 getestet.
+\end{quote}
+

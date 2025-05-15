@@ -33,6 +33,7 @@ public class TextFileReader implements Reader {
     public static final String ERROR_INTERSECTION_NAME_TOO_LONG = "Kreuzungsname ist zu lang: ";
     public static final String ERROR_INVALID_FILE_PATH = "Der angegebene Dateipfad existiert nicht oder ist keine gültige Datei: ";
     public static final String ERROR_TOO_MANY_CONNECTED_STREETS = "Diese Kreuzung hat eventuell mehr als 20 verbindende Straßen: ";
+    public static final String ERROR_DUPLICATE_TURNOFF_NAME = "Doppelter Abbiegepunktname: ";
 
     private static final int MAX_CONNECTED_STREETS = 43;
     private static final int MIN_CONNECTED_STREETS = 7;
@@ -295,6 +296,11 @@ public class TextFileReader implements Reader {
         for (int i = 3; i < parts.length; i += 2) {
             String dest = parts[i];
             double relProb = checkProbability (parts[i + 1]);
+
+            //linear search through the line doesnt really matter as only up to 20 destinations are allowed
+            if(dests.contains(dest)) {
+                throw new IllegalArgumentException(ERROR_DUPLICATE_TURNOFF_NAME + line);
+            }
             dests.add(dest);
             probs.add(relProb);
 

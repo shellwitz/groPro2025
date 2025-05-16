@@ -159,9 +159,9 @@ public class TextFileReader implements Reader {
     private static String stripComment(String line) {
         int commentIndex = line.indexOf('#');
         if (commentIndex != -1) {
-            return line.substring(0, commentIndex).trim(); // Remove everything after # and trim whitespace
+            return line.substring(0, commentIndex).trim(); // remove everything after # and trim whitespace
         }
-        return line.trim(); // Return the line as is if no # is found
+        return line.trim(); // return the line as is if no # is found
     }
 
     private static int checkMaxTime(String potentialMaxTime) {
@@ -187,7 +187,7 @@ public class TextFileReader implements Reader {
 
     private static void checkWhetherCoordIsFarEnough(List<Coord> alreadyExistingCoords, Coord newCord) {
         for (Coord existingCoord : alreadyExistingCoords) {
-            if (Coord.distance(existingCoord, newCord) < 0.1) { //0.1*100m Straßen sollten mindestens 10m auseinander liegen
+            if (Coord.distance(existingCoord, newCord) < 0.1) { //0.1*100m Steets should be apart at least 10m
                 throw new IllegalArgumentException(ERROR_COORDINATES_TOO_CLOSE + existingCoord + " und " + newCord);
             }
         }
@@ -216,7 +216,7 @@ public class TextFileReader implements Reader {
     }
 
     private static void parseEntryPoint(String line, Map<String, EntryPoint> entryPoints, List<Coord> coordChecker, HashSet<String> referencesMadeByEntryPoints) {
-        // Format: Name X Y Ziel Takt
+        // Format: Name X Y Destination Frequency
         String[] parts = line.split("\\s+");
 
         if (parts.length != ENTRY_POINT_PARTS_COUNT) { //if the length is not 5 the format of EntryPoint coordinate x y destination frequency is invalid
@@ -281,7 +281,7 @@ public class TextFileReader implements Reader {
 
     private static void parseIntersection(String line, Map<String, Intersection> intersections,
                                           Map<DirectedEdge, DirectedEdgeInfo> directedEdges, List<Coord> coordChecker, HashSet<String> referencesMadeByIntersections) {
-        // Format: Name X Y Ziel1 Anteil1 Ziel2 Anteil2 ...
+        // Format: Name X Y Target1 Probability1 Target2 Probability2 ...
         String[] parts = line.split("\\s+");
         String name = parts[0];
 

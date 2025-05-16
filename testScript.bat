@@ -1,7 +1,7 @@
 @echo off
 
 REM Set the directory containing input files
-set INPUT_DIR="normalCases"
+set INPUT_DIR="edgeCases"
 
 for %%f in (%INPUT_DIR%\*) do (
     echo Running trafficSimulation.jar with input file: %%f

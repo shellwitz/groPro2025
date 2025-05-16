@@ -19,13 +19,12 @@ public class BadInputTestRunner {
         }
         File badInputDir = new File(badInputDirPath);
 
-        // Ensure the directory exists
         if (!badInputDir.exists() || !badInputDir.isDirectory()) {
             System.err.println("Directory does not exist: " + badInputDirPath);
             return;
         }
 
-        // Define test files and their expected error messages
+        //define test files and their expected error messages
         Map<String, String> testCases = new HashMap<>();
         testCases.put("empty.txt", ERROR_NO_ENTRY_POINTS);
         testCases.put("ERROR_NO_INTERSECTIONS.txt", ERROR_NO_INTERSECTIONS);
@@ -52,7 +51,6 @@ public class BadInputTestRunner {
 
         boolean allTestsPassed = true;
 
-        // Iterate through all test cases
         for (Map.Entry<String, String> testCase : testCases.entrySet()) {
             String fileName = testCase.getKey();
             String expectedMessage = testCase.getValue();

@@ -18,18 +18,29 @@ public class Vehicle {
 
   double velocity;
 
+  public Vehicle(int id, String fromName, String toName, Coord fromCoord, Coord toCoord, Coord currentPosition, Coord direction, double velocity) {
+    this.id = id;
+    this.fromName = fromName;
+    this.toName = toName;
+    this.fromCoord = fromCoord;
+    this.toCoord = toCoord;
+    this.currentPosition = currentPosition;
+    this.direction = direction;
+    this.velocity = velocity;
+}
+
   @Override
   protected Vehicle clone() {
-    Vehicle cloned = new Vehicle();
-    cloned.id = this.id;
-    cloned.fromName = this.fromName;
-    cloned.toName = this.toName;
-    cloned.fromCoord = this.fromCoord.clone();
-    cloned.toCoord = this.toCoord.clone();
-    cloned.currentPosition = this.currentPosition.clone();
-    cloned.direction = this.direction.clone();
-    cloned.velocity = this.velocity;
-    return cloned;
+    return new Vehicle(
+        this.id,
+        this.fromName,
+        this.toName,
+        this.fromCoord.clone(),
+        this.toCoord.clone(),
+        this.currentPosition.clone(),
+        this.direction.clone(),
+        this.velocity
+    );
   }
 }
 

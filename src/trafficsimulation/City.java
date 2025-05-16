@@ -118,27 +118,29 @@ public class City {
     }
   }
 
-  private Vehicle createNewVehicle(int id, String from, String to){
-    Vehicle vehicle = new Vehicle();
-    vehicle.id = id;
-    vehicle.fromName = from;
-    vehicle.toName = to;
-    vehicle.currentPosition = entryPoints.get(from).coord;
-    vehicle.toCoord = intersections.get(to).coord;
-    vehicle.fromCoord = entryPoints.get(from).coord;
+  private Vehicle createNewVehicle(int id, String from, String to) {
+    Coord fromCoord = entryPoints.get(from).coord;
+    Coord toCoord = intersections.get(to).coord;
 
-    vehicle.direction = subtract(vehicle.toCoord, vehicle.fromCoord);
-    vehicle.direction.normalize();
+    Coord direction = subtract(toCoord, fromCoord);
+    direction.normalize();
 
     double randomValue = random.nextGaussian() * Vehicle.STANDARD_DEVIATION + Vehicle.EXPECTED_VELOCITY;
-    vehicle.direction.multiply(randomValue);
-    vehicle.velocity = randomValue;
+    direction.multiply(randomValue);
 
     DirectedEdge fromTo = new DirectedEdge(from, to);
-
     directedEdges.get(fromTo).increment();
 
-    return vehicle;
+    return new Vehicle(
+        id,
+        from,
+        to,
+        fromCoord,
+        toCoord,
+        fromCoord,
+        direction,
+        randomValue
+    );
   }
 
   private void updateVehicleHistory() {

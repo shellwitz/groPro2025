@@ -56,7 +56,7 @@
     {\Large \textbf{Thema: Simulation von Verkehrsflüssen}}\\[1cm]
     {16.05.2025}\\[5cm]
     {Daniel Ebel}\\[2cm]
-    Prüflingsnummer: 20015\\[0.5cm]
+    Prüflingsnummer: 101 20015\\[0.5cm]
     Bearbeitungszeitraum: 12.05.2025 - 16.05.2025\\[0.5cm]
     Programmiersprache: Java\\[0.5cm]
     Ausbildungsort: INFORM GmbH
@@ -71,6 +71,10 @@ Weder ganz noch in Teilen wurde die Arbeit bereits als Prüfungsleistung vorgele
 Mir ist bewusst, dass jedes Zuwiderhandeln als Täuschungsversuch zu gelten hat, der die Anerkennung als Prüfungsleistung ausschließt.
 
 \vspace{2cm}
+
+Aachen, 16.05.2025
+
+\vspace{1cm}
 
 \noindent\rule{7cm}{0.4pt}\\
 Unterschrift
@@ -120,7 +124,7 @@ Dokumentation.pdf
 
 Die wichtigsten Verzeichnisse und Dateien sind:
 \begin{itemize}
-    \item \texttt{doku/}: Enthält die Dokumentation, einschließlich der LaTeX-Dateien wie \texttt{docu.tex}, \texttt{intro.tex}, und \texttt{tests.tex}. Die gebaute PDF befindet sich im build Verzeichnis
+    \item \texttt{doku/}: Enthält die Dokumentation, einschließlich der LaTeX-Dateien wie \texttt{docu.tex}, \texttt{intro.tex}, und \texttt{tests.tex}. Die gebaute PDF befindet sich im build Verzeichnis.
     \item \texttt{src/}: Der Quellcode des Projekts. Die Javadateien befinden sich im trafficsimulation package.
     \item \texttt{normalCases/}, \texttt{edgeCases/} und \texttt{badInputTests/}: Testfälle für Normal, Grenz und Fehlerfälle.
     \item \texttt{trafficSimulation.jar}: Die ausführbare JAR-Datei der Simulation.
@@ -148,6 +152,14 @@ Beispiel:
 
 
 \texttt{java -jar trafficsimulationjar C:\textbackslash Users\textbackslash debel\textbackslash input.txt}
+
+Für jede Simulation wird ein eigener Ausgabeordner angelegt,
+dessen Name aus dem Präfix \texttt{output\_},
+gefolgt vom Namen der Eingabedatei ohne Dateiendung, besteht. 
+Beispielsweise wird die Ausgabe der Datei \texttt{Beispielhausen.txt} im Ordner \texttt{output\_Beispielhausen} gespeichert. 
+Die Ausgabe des Programms besteht aus drei Dateien. 
+Falls im Ordner bereits gleichnamige Dateien vorhanden sind, werden diese überschrieben.
+Der neuerzeugte Ordner befindet sich auf gleicher Ebene, wie die ausführbare \texttt{.jar}.
 
 
 

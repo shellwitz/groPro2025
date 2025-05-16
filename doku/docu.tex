@@ -8,7 +8,7 @@
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{parskip}
-
+\usepackage{tcolorbox}
 \usepackage{placeins}
 \usepackage{graphicx}
 %\graphicspath{{images/}}
@@ -97,13 +97,9 @@ Das Projekt ist wie folgt strukturiert:
 
 \begin{verbatim}
 .gitignore
-groPro2025.iml
-info.txt
 testScript.bat
 testScript.sh
-todos.txt
 trafficSimulation.jar
-.idea/
 6511-225_Download-Vorlagen/
     Plot_howto.txt
     Plot.py
@@ -118,8 +114,8 @@ META-INF/
 normalCases/
 badInputTests/
 src/
-out/
 BadInputTestRunner.jar
+Dokumentation.pdf
 \end{verbatim}
 
 Die wichtigsten Verzeichnisse und Dateien sind:
@@ -129,7 +125,6 @@ Die wichtigsten Verzeichnisse und Dateien sind:
     \item \texttt{normalCases/}, \texttt{edgeCases/} und \texttt{badInputTests/}: Testfälle für Normal, Grenz und Fehlerfälle.
     \item \texttt{trafficSimulation.jar}: Die ausführbare JAR-Datei der Simulation.
     \item \texttt{6511-225\_Download-Vorlagen/}: Die IHK Vorlagen und das Skript \texttt{Plot.py}.
-    \item \texttt{out/}: enthält die von IntelliJ automatisch gebaute .jar
     \item \texttt{testScript.bat} \texttt{testScript.sh}: Die Testskripte zum automatischen Testen von Verzeichnissen
     \item \texttt{BadInputTestRunner.jar}: Testjava Hilfstool zum automatischen Testen von Fehlerfällen
 \end{itemize}
@@ -175,7 +170,34 @@ Betriebssystem: Windows 11 Enterprise
 
 \chapter{Zusammenfassung und Ausblick}
 
-% \chapter{Quellcode}
-% \lstinputlisting[language=Java]{../src/trafficsimulation/Main.java}
+Im Rahmen der praktischen Prüfung wurde ein Java-Programm zur Simulation von Verkehrsflüssen entwickelt. Ziel war es, Fahrzeugbewegungen in einem vordefinierten Straßennetz zu modellieren und auszuwerten.
+Die Eingabedateien beschreiben dabei Einfallspunkte, Kreuzungen sowie einen Simulationszeitraum. Die Fahrzeuge bewegen sich mit individuell zufälligen Geschwindigkeiten durch das Netz und treffen an Kreuzungen Entscheidungen gemäß konfigurierter Wahrscheinlichkeiten.
+
+Die Simulation erzeugt drei zentrale Ausgabedateien:
+\begin{itemize}
+    \item \texttt{Plan.txt} enthält die Straßengeometrie,
+    \item \texttt{Statistik.txt} fasst die Streckenauslastung zusammen,
+    \item \texttt{Fahrzeuge.txt} ermöglicht eine Visualisierung der Fahrzeugpositionen im Zeitverlauf.
+\end{itemize}
+
+Die Implementierung basiert auf einer strukturierten Klassenarchitektur und verwendet Techniken zur Fehlerbehandlung, Datenhaltung und Erweiterbarkeit.
+Ein umfangreiches Testkonzept gewährleistet die korrekte Verarbeitung von Fehler-, Grenz- und Normalfällen.
+Zusätzlich wurde ein automatisiertes Testwerkzeug zur Validierung der Eingabedateien entwickelt.
+
+\section*{Ausblick}
+
+Für zukünftige Erweiterungen bieten sich vielfältige Möglichkeiten:
+\begin{itemize}
+    \item Berücksichtigung von Verkehrsregeln wie \emph{Rechts-vor-Links} oder \emph{Ampelschaltungen},
+    \item realitätsnähere Fahrdynamik durch Mindestabstände oder Überholverbote,
+    \item Erweiterung auf mehrspurige Straßen sowie variable Geschwindigkeiten je Streckenabschnitt,
+    \item Anbindung an eine GUI oder Weboberfläche zur interaktiven Parametereingabe und Echtzeitvisualisierung,
+    \item Integration von OpenStreetMap-Daten zur Simulation realer Städte,
+    \item Einbindung eines Seeds als Startparameter für die Zufallszahlengeneration, um Ergebnisse reproduzierbar zu machen,
+    \item parallele Simulation und gleichzeitiges Schreiben der drei Ausgabedateien durch Multithreading.
+\end{itemize}
+
+Die entwickelte Simulation bietet somit eine stabile und erweiterbare Grundlage für weiterführende Projekte im Bereich Verkehrsmodellierung und -optimierung.
+
 
 \end{document}

@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Random;
@@ -46,19 +47,19 @@ public class City {
     this.directedEdges = cityDTO.directedEdges;
   }
 
-  public HashMap<DirectedEdge, DirectedEdgeInfo> getDirectedEdges() {
+  public Map<DirectedEdge, DirectedEdgeInfo> getDirectedEdges() {
     return directedEdges;
   }
 
-  public HashMap<String, EntryPoint> getEntryPoints() {
+  public Map<String, EntryPoint> getEntryPoints() {
     return entryPoints;
   }
 
-  public HashMap<String, Intersection> getIntersections() {
+  public Map<String, Intersection> getIntersections() {
     return intersections;
   }
 
-  public ArrayList<ArrayList<Vehicle>> getVehicleHistory() {
+  public List<ArrayList<Vehicle>> getVehicleHistory() {
     return vehicleHistory;
   }
 

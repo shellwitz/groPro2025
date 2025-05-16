@@ -93,6 +93,18 @@ Abschließend werden alle Daten in ein \texttt{CityDTO}-Objekt überführt,
 das als Grundlage für die Initialisierung der Simulation dient.
 
 Auf der folgenden Seite lässt sich in das Nassi-Shneiderman Meisterwerk der, das \texttt{CityDTO} erzeugenden read-Methode hineinzoomen.
+\begin{tcolorbox}[colback=blue!5!white, colframe=blue!75!black, title=Hinweis]
+In den folgenden Nassi-Shneiderman-Diagrammen sind Java \texttt{try-with-resource}-Statements aufgrund von 
+Limitationen der Nassi-Shneiderman-Diagramm-Erstellungssoftware \emph{Structorizer} wie folgt dargestellt:
+\begin{verbatim}
+var br: BufferedReader = null
+try
+...
+br =
+catch e
+\end{verbatim}
+\end{tcolorbox}
+
 \clearpage
 \FloatBarrier
 \begin{figure}[h!]
@@ -200,6 +212,7 @@ Die Methode createNewVehicle() initialisiert dessen Position, Ziel, Bewegungsric
 Die Geschwindigkeit wird normalverteilt mit einem Erwartungswert von 45 km/h und einer Standardabweichung von 10 km/h erzeugt.
 Hierzu wird eine standardnormalverteilte Zufallsvariable (\(N(0,1)\)) generiert, mit der Standardabweichung multipliziert und anschließend zum Erwartungswert addiert.
 Die Geschwindigkeit wird zuvor in die Einheit von 100 Metern umgerechnet.
+Jede Zufallszahl wird mithilfe eines Pseudozufallsgenerators (\texttt{java.util.Random}) erzeugt.
 Außerdem wird die zugehörige Kante im Verkehrsnetz bei Fahrzeugeintritt aktualisiert.
 
 Statistikerhebung: Nach jedem Zeitschritt wird für jede Kante im Netz die aktuelle Anzahl an Fahrzeugen geprüft und ggf. ein neuer Maximalwert gespeichert (updateDirectedEdgesMaxima()).
